@@ -14,8 +14,8 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="property_information")
-public class PropertyInformation {
+@Table(name="property_listing")
+public class PropertyListing {
     
     @Column(name = "district_code")
     private short districtCode;
