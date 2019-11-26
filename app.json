@@ -1,0 +1,5 @@
+{
+  "name": "Property Finder Daily Scan",
+  "description": "An app to populate the database with current properties for sale",
+  "addons": [ "heroku-postgresql" ]
+}
