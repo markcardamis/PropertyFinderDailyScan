@@ -9,11 +9,13 @@ import com.majoapps.propertyfinderdailyscan.business.domain.PropertySearchCommer
 import com.majoapps.propertyfinderdailyscan.business.domain.PropertySearchRequest;
 import com.majoapps.propertyfinderdailyscan.business.domain.SearchLocations;
 import com.majoapps.propertyfinderdailyscan.business.service.DomainAuthentication;
-import com.majoapps.propertyfinderdailyscan.business.service.DomainListing;
-import com.majoapps.propertyfinderdailyscan.business.service.PlanningPortalAddressSearch;
+import com.majoapps.propertyfinderdailyscan.business.service.DomainListingService;
+import com.majoapps.propertyfinderdailyscan.business.service.PropertyListingService;
+import com.majoapps.propertyfinderdailyscan.data.entity.PropertyListing;
 import com.majoapps.propertyfinderdailyscan.utils.DateHelper;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -23,12 +25,21 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class DailyPropertyScan {
 
+    private final PropertyListingService propertyListingService;
+    private final DomainListingService domainListingService;
+
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
     private static final DateHelper dateHelper = new DateHelper();
+    private static final ModelMapper modelMapper = new ModelMapper();
+
+    @Autowired
+    public DailyPropertyScan(PropertyListingService propertyListingService, DomainListingService domainListingService) {
+        this.propertyListingService = propertyListingService;
+        this.domainListingService = domainListingService;
+    }
 
     private String authToken = "";
     private PropertyListingDTO[] propertyListings = null;
-    private PropertyListingDTO[] propertyListingsComplete = null;
     private PropertySearchRequest searchJson;
     private PropertySearchCommercialRequest searchJsonCommercial;
     private Integer domainKey = 0;
@@ -42,16 +53,13 @@ public class DailyPropertyScan {
             System.getenv().get("DOMAIN_KEY_5")
     };
 
-    //TODO Changed schedule to run when finish services
     @Scheduled(fixedRate = 3600000000L) // Run every hour  3600000L
     public void getListingsNSW() throws Exception {
         log.debug("Business Day Check {}", dateFormat.format(new Date()));
-        if (dateHelper.isBusinessDay()) {
+        if (!dateHelper.isBusinessDay()) {
             log.info("Schduled run of getListing {}", dateFormat.format(new Date()));
             domainKey = 2;
             getListingsResidentialNSW();
-            getListingsCommercialNSW();
-            propertyListingsComplete = addPlanningPortalAddress(propertyListingsComplete);
         }
     }
 
@@ -123,92 +131,31 @@ public class DailyPropertyScan {
                     propertyListings = getDomainListing();
                 }
 
-                if (propertyListingsComplete == null && propertyListings != null) {
+                if (propertyListings != null && propertyListings.length > 0){
                     log.debug("{} Pages 1 {}", price, propertyListings.length);
-                    propertyListingsComplete = propertyListings;
-                } else if (propertyListings != null && propertyListings.length > 0){
-                    log.debug("{} Pages 1 {}", price, propertyListings.length);
-                    propertyListingsComplete = ArrayUtils.insert(0, propertyListingsComplete, propertyListings);
+                    for (int l = 0; l < propertyListings.length; l++) {
+                        PropertyListing propertyListing = modelMapper.map(propertyListings[l], PropertyListing.class);
+                        System.out.println(propertyListing.toString());
+                        //propertyListingService.savePropertyListing(propertyListing);
+                    }
+                    
+                    
                 }
                 int i = 1;
                 while (propertyListings != null && propertyListings.length >= 200 && i < 5) {
                     i++;
                     propertySearchRequest.page = i;
                     propertyListings = getDomainListing();
-                    if (propertyListings != null) {
+                    if (propertyListings != null && propertyListings.length > 0) {
                         log.debug("{} Pages {} {}", price, i, propertyListings.length);
-                        propertyListingsComplete = ArrayUtils.insert(0, propertyListingsComplete, propertyListings);
+                        //propertyListingService.savePropertyListing();
                     }
                 }
                 price += priceIncrementAmount;
             }
         }
 
-        if (propertyListingsComplete != null) {
-            log.info("Residential property listings complete {} ", propertyListingsComplete.length);
-        }
-    }
 
-    public void getListingsCommercialNSW() throws Exception {
-
-        searchJsonCommercial = new PropertySearchCommercialRequest();
-        searchJsonCommercial.searchMode = "forSale";
-        PropertySearchCommercialRequest.PriceSearch priceSearch = new PropertySearchCommercialRequest.PriceSearch();
-        priceSearch.min = 100000;
-        priceSearch.max = 5000000;
-        priceSearch.type = "totalAmount";
-        searchJsonCommercial.price = priceSearch;
-        searchJsonCommercial.propertyTypes = new String[]{
-                "blockOfUnits",
-                "developmentLand",
-                "developmentSite",
-                "newLand",
-                "propertyRealEstate",
-                "vacantLand"
-        };
-        searchJsonCommercial.landAreaMin = 100;
-        searchJsonCommercial.pageSize = 200;
-        PropertySearchCommercialRequest.LocationSearch sydneyRegion = new PropertySearchCommercialRequest.LocationSearch();
-        sydneyRegion.state = "NSW";
-        sydneyRegion.region = "Sydney Region";
-        PropertySearchCommercialRequest.LocationSearch regionalNSW = new PropertySearchCommercialRequest.LocationSearch();
-        regionalNSW.state = "NSW";
-        regionalNSW.region = "Regional NSW";
-        PropertySearchCommercialRequest.LocationSearch illawarraSouthCoast = new PropertySearchCommercialRequest.LocationSearch();
-        illawarraSouthCoast.state = "NSW";
-        illawarraSouthCoast.region = "Illawarra & South Coast";
-        PropertySearchCommercialRequest.LocationSearch hunterCentralNorthCoasts = new PropertySearchCommercialRequest.LocationSearch();
-        hunterCentralNorthCoasts.state = "NSW";
-        hunterCentralNorthCoasts.region = "Hunter, Central & North Coasts";
-        PropertySearchCommercialRequest.LocationSearch[] locations = new PropertySearchCommercialRequest.LocationSearch[]
-                {sydneyRegion};
-
-        for (int k = 0; k < locations.length; k++) {
-            log.debug("Location ", locations[k].region);
-            searchJsonCommercial.locations = new PropertySearchCommercialRequest.LocationSearch[]{locations[k]};
-            searchJsonCommercial.page = 1;
-            getDomainAuth(domainKey);
-            getDomainListingCommercial();
-            if (propertyListingsComplete == null && propertyListings != null) {
-                propertyListingsComplete = propertyListings;
-            } else if (propertyListings != null && propertyListings.length > 0) {
-                propertyListingsComplete = ArrayUtils.insert(0, propertyListingsComplete, propertyListings);
-
-            }
-            int i = 1;
-            while (propertyListings != null && propertyListings.length >= 200 && i < 5) {
-                i++;
-                searchJsonCommercial.page = i;
-                getDomainListingCommercial();
-                if (propertyListings != null && propertyListings.length > 0) {
-                    propertyListingsComplete = ArrayUtils.insert(0, propertyListingsComplete, propertyListings);
-                }
-            }
-        }
-
-        if (propertyListingsComplete != null) {
-            log.info("Commercial property listings complete {} ", propertyListingsComplete.length);
-        }
     }
 
     private void getDomainAuth(Integer key) throws Exception {
@@ -218,22 +165,8 @@ public class DailyPropertyScan {
     }
 
     private PropertyListingDTO[] getDomainListing() throws Exception {
-        PropertyListingDTO domainListing = new PropertyListingDTO();
         domainSearchCount++;
-        return (domainListing.getPropertyList(authToken, searchJson));
+        return (domainListingService.getPropertyList(authToken, searchJson));
     }
-
-    private PropertyListingDTO getDomainListingCommercial() throws Exception {
-        PropertyListingDTO domainListing = new PropertyListingDTO();
-        domainSearchCount++;
-        return(domainListing.getPropertyList(authToken, searchJsonCommercial));
-    }
-
-    private PropertyListingDTO[] addPlanningPortalAddress(PropertyListingDTO[] pListings) throws Exception {
-        PlanningPortalAddressSearch planningPortalAddressSearch = new PlanningPortalAddressSearch();
-        return (planningPortalAddressSearch.getFormattedAddressMultiThreaded(pListings));
-    }
-
    
-
 }

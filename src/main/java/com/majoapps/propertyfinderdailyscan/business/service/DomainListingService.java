@@ -19,11 +19,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class DomainListing implements IDomainListing
+public class DomainListingService implements IDomainListingService
 {
     private IServiceHelper mServiceHelper;// = new IServiceHelper();
 
-    public DomainListing() throws Exception {
+    public DomainListingService() throws Exception {
         mServiceHelper = new ServiceHelper();
     }
 
