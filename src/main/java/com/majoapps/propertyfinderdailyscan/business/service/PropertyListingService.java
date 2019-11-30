@@ -36,4 +36,9 @@ public class PropertyListingService {
     public PropertyListing savePropertyListing(PropertyListing propertyListing) {
         return this.propertyListingRepository.save(propertyListing);
     }
+
+    public void deleteAll() {
+        this.propertyListingRepository.deleteAll();
+    }
+
 }

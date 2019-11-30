@@ -52,7 +52,7 @@ public class ServiceHelper implements IServiceHelper
                 wr.flush ();
                 wr.close ();
             }catch (Exception ex) {
-                log.error("Exception ", ex);
+                log.error("Exception : {} ", ex);
                 throw new Exception(ex);
             }
         }

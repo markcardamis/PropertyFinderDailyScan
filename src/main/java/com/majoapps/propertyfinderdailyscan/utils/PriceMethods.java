@@ -7,7 +7,7 @@ public class PriceMethods
 {
     public static Integer stringToInteger(String text) throws Exception {
 
-        String errorNumber = "10000000";
+        String errorNumber = "0";
 
         try {
             if (text != null && !text.isEmpty() && text.matches(".*\\d.*")) {
@@ -60,7 +60,7 @@ public class PriceMethods
 
             text = removeMultipleDecimals(text);
         } catch (Exception e){
-            log.error("Exception ", e);
+            log.error("Exception : {} ", e);
             return (int) Double.parseDouble(errorNumber);
         }
         return ((int) Double.parseDouble(text));

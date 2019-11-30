@@ -31,7 +31,7 @@ public class CSVUtils {
                 }
             }
         } catch (Exception e) {
-            log.error("Exception ", e);
+            log.error("Exception : {} ", e);
         } finally {
             if (scanner != null) {
                 scanner.close();

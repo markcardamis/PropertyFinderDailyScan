@@ -106,7 +106,7 @@ public class PlanningPortalAddressSearch implements IPlanningPortalAddressSearch
                 Thread.sleep(2000-eTime);
 
             } catch (Exception e) {
-                log.error("Exception: " + e);
+                log.error("Exception: {} " + e);
             }
 
         }

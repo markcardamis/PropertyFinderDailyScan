@@ -1,7 +1,5 @@
 package com.majoapps.propertyfinderdailyscan;
 
-import com.majoapps.propertyfinderdailyscan.business.service.DomainListingService;
-import com.majoapps.propertyfinderdailyscan.business.service.PropertyListingService;
 import com.majoapps.propertyfinderdailyscan.scheduled.DailyPropertyScan;
 
 import org.springframework.beans.factory.annotation.Autowired;
