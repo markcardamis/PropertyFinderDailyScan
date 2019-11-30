@@ -12,7 +12,6 @@ import com.majoapps.propertyfinderdailyscan.business.domain.PropertySearchReques
 import com.majoapps.propertyfinderdailyscan.business.domain.SearchLocations;
 import com.majoapps.propertyfinderdailyscan.business.service.DomainAuthentication;
 import com.majoapps.propertyfinderdailyscan.business.service.DomainListingService;
-import com.majoapps.propertyfinderdailyscan.business.service.PlanningPortalAddressSearch;
 import com.majoapps.propertyfinderdailyscan.business.service.PropertyListingService;
 import com.majoapps.propertyfinderdailyscan.data.entity.PropertyListing;
 import com.majoapps.propertyfinderdailyscan.utils.DateHelper;
@@ -20,7 +19,6 @@ import com.majoapps.propertyfinderdailyscan.utils.DateHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;

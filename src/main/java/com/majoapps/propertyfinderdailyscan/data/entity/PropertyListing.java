@@ -8,10 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-
 import lombok.Data;
 
 @Entity
@@ -62,7 +58,4 @@ public class PropertyListing {
     private String planningPortalPropId;
     @Column(name="planning_portal_address")
     private String planningPortalAddress;
-
-    @Column(name="deleted")
-    private boolean deleted;
 }
