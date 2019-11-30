@@ -70,7 +70,7 @@ public class DomainListingService implements IDomainListingService
                         propertyListings[i].price = propertyListingResponse[i].listing.priceDetails.displayPrice;
                         propertyListings[i].listingURL = "https://www.domain.com.au/" +
                                     propertyListingResponse[i].listing.listingSlug;
-                        propertyListings[i].listingPhoto = ((propertyListingResponse[i].listing.media == null)
+                        propertyListings[i].listingPhoto = ((propertyListingResponse[i].listing.media == null) || (propertyListingResponse[i].listing.media.isEmpty())
                                     ? imageDefaultUrl : propertyListingResponse[i].listing.media.get(0).url);
                         propertyListings[i].summaryDescription = Jsoup.parse(propertyListingResponse[i].listing.summaryDescription.toLowerCase()).text();
                         propertyListings[i].latitude = propertyListingResponse[i].listing.propertyDetails.latitude;
@@ -123,7 +123,7 @@ public class DomainListingService implements IDomainListingService
                     propertyListings[i].postCode = propertyListingResponse[i].metadata.addressComponents.postcode;
                     propertyListings[i].price = propertyListingResponse[i].price;
                     propertyListings[i].listingURL = propertyListingResponse[i].ad.url;
-                    propertyListings[i].listingPhoto = ((propertyListingResponse[i].media == null)
+                    propertyListings[i].listingPhoto = ((propertyListingResponse[i].media == null || (propertyListingResponse[i].media.isEmpty()))
                             ? imageDefaultUrl : propertyListingResponse[i].media.get(0).imageUrl);
                     propertyListings[i].summaryDescription = propertyListingResponse[i].headline;
                     propertyListings[i].latitude = propertyListingResponse[i].geoLocation.latitude;
