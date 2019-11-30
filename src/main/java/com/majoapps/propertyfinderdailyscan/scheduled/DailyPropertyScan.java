@@ -16,6 +16,7 @@ import com.majoapps.propertyfinderdailyscan.utils.DateHelper;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +42,7 @@ public class DailyPropertyScan {
     private String authToken = "";
     private PropertyListingDTO[] propertyListings = null;
     private PropertySearchRequest searchJson;
+    private PropertyListing propertyListing = new PropertyListing();
     private PropertySearchCommercialRequest searchJsonCommercial;
     private Integer domainKey = 0;
     private Integer domainSearchCount = 0;
@@ -53,12 +55,12 @@ public class DailyPropertyScan {
             System.getenv().get("DOMAIN_KEY_5")
     };
 
-    @Scheduled(fixedRate = 3600000000L) // Run every hour  3600000L
+    @Async
     public void getListingsNSW() throws Exception {
         log.debug("Business Day Check {}", dateFormat.format(new Date()));
         if (!dateHelper.isBusinessDay()) {
             log.info("Schduled run of getListing {}", dateFormat.format(new Date()));
-            domainKey = 2;
+            domainKey = 4;
             getListingsResidentialNSW();
         }
     }
@@ -72,7 +74,8 @@ public class DailyPropertyScan {
         Integer priceIncrementAmountSmallRegional = 20000;
         Integer priceIncrementAmountMedium = 200000;
         Integer priceIncrementAmountLarge = 1000000;
-        Integer priceStop = 5000000;
+        //Integer priceStop = 5000000;
+        Integer priceStop = 150000;
         Integer minLandSize = 400;
         String[] propertyTypes = new String[]{"DevelopmentSite", "House", "NewLand", "VacantLand"};
 
@@ -134,9 +137,13 @@ public class DailyPropertyScan {
                 if (propertyListings != null && propertyListings.length > 0){
                     log.debug("{} Pages 1 {}", price, propertyListings.length);
                     for (int l = 0; l < propertyListings.length; l++) {
-                        PropertyListing propertyListing = modelMapper.map(propertyListings[l], PropertyListing.class);
-                        System.out.println(propertyListing.toString());
-                        //propertyListingService.savePropertyListing(propertyListing);
+                        propertyListing = modelMapper.map(propertyListings[l], PropertyListing.class);
+                        System.out.println(l);
+                        if (propertyListing != null) {
+                            propertyListingService.savePropertyListing(propertyListing);
+                        } else {
+                            System.out.println("NULL LISTING " + propertyListing);
+                        }
                     }
                     
                     
@@ -148,7 +155,15 @@ public class DailyPropertyScan {
                     propertyListings = getDomainListing();
                     if (propertyListings != null && propertyListings.length > 0) {
                         log.debug("{} Pages {} {}", price, i, propertyListings.length);
-                        //propertyListingService.savePropertyListing();
+                        for (int m = 0; m < propertyListings.length; m++) {
+                            propertyListing = modelMapper.map(propertyListings[m], PropertyListing.class);
+                            System.out.println(m);
+                            if (propertyListing != null) {
+                                propertyListingService.savePropertyListing(propertyListing);
+                            } else {
+                                System.out.println("NULL LISTING " + propertyListing);
+                            }
+                        }
                     }
                 }
                 price += priceIncrementAmount;

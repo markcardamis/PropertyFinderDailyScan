@@ -14,11 +14,13 @@ import com.majoapps.propertyfinderdailyscan.utils.ServiceHelper;
 import com.majoapps.propertyfinderdailyscan.utils.StringCheck;
 
 import org.jsoup.Jsoup;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+@Service
 public class DomainListingService implements IDomainListingService
 {
     private IServiceHelper mServiceHelper;// = new IServiceHelper();
@@ -49,11 +51,14 @@ public class DomainListingService implements IDomainListingService
                 if (propertyListingResponse[i].type.equals("PropertyListing")) {
                     propertyListings[i].timeDate = timeDate;
                     propertyListings[i].domainListingId = propertyListingResponse[i].listing.id;
-                    propertyListings[i].displayableAddress = propertyListingResponse[i].listing.propertyDetails.displayableAddress;
                     propertyListings[i].address = StringCheck.isNotNullOrEmpty(propertyListingResponse[i].listing.propertyDetails.streetNumber, " ") +
                             StringCheck.isNotNullOrEmpty(propertyListingResponse[i].listing.propertyDetails.street, " ").toUpperCase(Locale.ENGLISH) +
                             StringCheck.isNotNullOrEmpty(propertyListingResponse[i].listing.propertyDetails.suburb, " ").toUpperCase(Locale.ENGLISH) +
                             propertyListingResponse[i].listing.propertyDetails.postcode;
+                    propertyListings[i].unitNumber = StringCheck.isNotNullOrEmpty(propertyListingResponse[i].listing.propertyDetails.unitNumber , "");
+                    propertyListings[i].houseNumber = StringCheck.isNotNullOrEmpty(propertyListingResponse[i].listing.propertyDetails.streetNumber, "");
+                    propertyListings[i].streetName = StringCheck.isNotNullOrEmpty(propertyListingResponse[i].listing.propertyDetails.street, "");
+                    propertyListings[i].suburbName = StringCheck.isNotNullOrEmpty(propertyListingResponse[i].listing.propertyDetails.suburb, "");
                     propertyListings[i].area = propertyListingResponse[i].listing.propertyDetails.landArea;
                     propertyListings[i].postCode = propertyListingResponse[i].listing.propertyDetails.postcode;
                     propertyListings[i].price = propertyListingResponse[i].listing.priceDetails.displayPrice;
@@ -62,8 +67,11 @@ public class DomainListingService implements IDomainListingService
                     propertyListings[i].summaryDescription = Jsoup.parse(propertyListingResponse[i].listing.summaryDescription.toLowerCase()).text();
                     propertyListings[i].lat = propertyListingResponse[i].listing.propertyDetails.latitude;
                     propertyListings[i].lng = propertyListingResponse[i].listing.propertyDetails.longitude;
+                    propertyListings[i].bathrooms = propertyListingResponse[i].listing.propertyDetails.bathrooms;
+                    propertyListings[i].bedrooms = propertyListingResponse[i].listing.propertyDetails.bedrooms;
+                    propertyListings[i].carspaces = propertyListingResponse[i].listing.propertyDetails.carspaces;
                 } else {
-                    propertyListings[i].displayableAddress = "1 Sydney St, Sydney NSW";
+                    propertyListings[i].domainListingId = 0;
                     propertyListings[i].address = "1 Sydney St SYDNEY 2000";
                     propertyListings[i].area = 1;
                     propertyListings[i].postCode = "2000";
@@ -97,7 +105,6 @@ public class DomainListingService implements IDomainListingService
                 propertyListings[i] = new PropertyListingDTO();
                 propertyListings[i].timeDate = timeDate;
                 propertyListings[i].domainListingId = propertyListingResponse[i].id;
-                propertyListings[i].displayableAddress = propertyListingResponse[i].address;
                 propertyListings[i].address = StringCheck.isNotNullOrEmpty(propertyListingResponse[i].metadata.addressComponents.streetNumber, " ") +
                         StringCheck.isNotNullOrEmpty(propertyListingResponse[i].metadata.addressComponents.street, " ").toUpperCase(Locale.ENGLISH) +
                         StringCheck.isNotNullOrEmpty(propertyListingResponse[i].metadata.addressComponents.suburb, " ").toUpperCase(Locale.ENGLISH) +

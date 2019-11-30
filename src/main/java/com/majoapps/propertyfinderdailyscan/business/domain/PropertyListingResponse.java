@@ -64,8 +64,8 @@ public class PropertyListingResponse {
         public List<String> features = null;
         public String propertyType;
         public List<String> allPropertyTypes = null;
-        public Integer bathrooms;
-        public Integer bedrooms;
+        public Double bathrooms;
+        public Double bedrooms;
         public Integer carspaces;
         public String unitNumber;
         public String streetNumber;
