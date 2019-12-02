@@ -5,7 +5,9 @@ import com.majoapps.propertyfinderdailyscan.business.domain.DomainTokenAuthRespo
 import com.majoapps.propertyfinderdailyscan.utils.HttpMethod;
 import com.majoapps.propertyfinderdailyscan.utils.IServiceHelper;
 import com.majoapps.propertyfinderdailyscan.utils.ServiceHelper;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DomainAuthentication implements IDomainAuthentication
 {
     private IServiceHelper mServiceHelper;// = new IServiceHelper();

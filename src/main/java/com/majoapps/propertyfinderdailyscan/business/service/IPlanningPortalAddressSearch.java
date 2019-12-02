@@ -1,8 +1,8 @@
 package com.majoapps.propertyfinderdailyscan.business.service;
 
 import com.majoapps.propertyfinderdailyscan.business.domain.PropertyListingDTO;
+import java.util.List;
 
 public interface IPlanningPortalAddressSearch {
-    PropertyListingDTO[] getFormattedAddress(PropertyListingDTO[] propertyListings) throws Exception;
-    PropertyListingDTO[] getFormattedAddressMultiThreaded(PropertyListingDTO[] propertyListings) throws Exception;
+    List<PropertyListingDTO> getFormattedAddressMultiThreaded(List<PropertyListingDTO> propertyListings) throws Exception;
 }

@@ -1,5 +1,7 @@
 package com.majoapps.propertyfinderdailyscan.business.domain;
 
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
@@ -19,6 +21,9 @@ public class PropertyListingDTO {
     public String suburbName;
     public String postCode;
     public Integer area;
+    public String zone;
+    public BigDecimal floorSpaceRatio;
+    public Integer landValue;
     public Double bathrooms;
     public Double bedrooms;
     public Integer carspaces;

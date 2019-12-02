@@ -1,61 +1,70 @@
 package com.majoapps.propertyfinderdailyscan.scheduled;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.majoapps.propertyfinderdailyscan.business.domain.DomainTokenAuthResponse;
 import com.majoapps.propertyfinderdailyscan.business.domain.PropertyListingDTO;
 import com.majoapps.propertyfinderdailyscan.business.domain.PropertySearchCommercialRequest;
 import com.majoapps.propertyfinderdailyscan.business.domain.PropertySearchRequest;
 import com.majoapps.propertyfinderdailyscan.business.domain.SearchLocations;
-import com.majoapps.propertyfinderdailyscan.business.service.DomainAuthentication;
-import com.majoapps.propertyfinderdailyscan.business.service.DomainListingService;
+import com.majoapps.propertyfinderdailyscan.business.service.IDomainAuthentication;
+import com.majoapps.propertyfinderdailyscan.business.service.IDomainListingService;
+import com.majoapps.propertyfinderdailyscan.business.service.IPlanningPortalAddressSearch;
+import com.majoapps.propertyfinderdailyscan.business.service.PropertyInformationService;
 import com.majoapps.propertyfinderdailyscan.business.service.PropertyListingService;
+import com.majoapps.propertyfinderdailyscan.data.entity.PropertyInformation;
 import com.majoapps.propertyfinderdailyscan.data.entity.PropertyListing;
 import com.majoapps.propertyfinderdailyscan.utils.DateHelper;
-
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
 public class DailyPropertyScan {
-
-    private final PropertyListingService propertyListingService;
-    private final DomainListingService domainListingService;
+    private final static int PAGE_SIZE = 200;
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
     private static final DateHelper dateHelper = new DateHelper();
     private static final ModelMapper modelMapper = new ModelMapper();
+    private List<PropertyListingDTO> propertyListingList = new ArrayList<>();
+
+    private final PropertyListingService propertyListingService;
+    private final PropertyInformationService propertyInformationService;
+    private final IDomainListingService domainListingService;
+    private final IDomainAuthentication domainAuthentication;
+    private final IPlanningPortalAddressSearch planningPortalAddressSearch;
 
     @Autowired
-    public DailyPropertyScan(PropertyListingService propertyListingService, DomainListingService domainListingService) {
+    public DailyPropertyScan(PropertyListingService propertyListingService, 
+            PropertyInformationService propertyInformationService,
+            IDomainListingService domainListingService, 
+            IDomainAuthentication domainAuthentication, 
+            IPlanningPortalAddressSearch planningPortalAddressSearch) {
         this.propertyListingService = propertyListingService;
+        this.propertyInformationService = propertyInformationService;
         this.domainListingService = domainListingService;
+        this.domainAuthentication = domainAuthentication;
+        this.planningPortalAddressSearch = planningPortalAddressSearch;
     }
 
-    private String authToken = "";
-    private PropertyListingDTO[] propertyListings = null;
-    private PropertySearchRequest searchJson;
-    private PropertyListing propertyListing = new PropertyListing();
-    private List<PropertyListing> propertyListingList = new ArrayList<>();
-    private PropertySearchCommercialRequest searchJsonCommercial;
+    private String[] authKey = {
+        System.getenv().get("DOMAIN_KEY_0"),
+        System.getenv().get("DOMAIN_KEY_1"),
+        System.getenv().get("DOMAIN_KEY_2"),
+        System.getenv().get("DOMAIN_KEY_3"),
+        System.getenv().get("DOMAIN_KEY_4"),
+        System.getenv().get("DOMAIN_KEY_5")
+    };
+    private String authTokenString = "";
+    
     private Integer domainKey = 0;
     private Integer domainSearchCount = 0;
-    private String[] authKey = {
-            System.getenv().get("DOMAIN_KEY_0"),
-            System.getenv().get("DOMAIN_KEY_1"),
-            System.getenv().get("DOMAIN_KEY_2"),
-            System.getenv().get("DOMAIN_KEY_3"),
-            System.getenv().get("DOMAIN_KEY_4"),
-            System.getenv().get("DOMAIN_KEY_5")
-    };
+    
 
     @Async
     public void getListingsNSW() throws Exception {
@@ -89,9 +98,6 @@ public class DailyPropertyScan {
         Integer minLandSize = 400;
         String[] propertyTypes = new String[]{"DevelopmentSite", "House", "NewLand", "VacantLand"};
 
-        getDomainAuth(domainKey);
-        log.debug("Get Domain Key {} ", domainKey);
-
         PropertySearchRequest.Locations sydneyRegion = new PropertySearchRequest.Locations();
         sydneyRegion.state = "NSW";
         sydneyRegion.region = "Sydney Region";
@@ -107,15 +113,15 @@ public class DailyPropertyScan {
         PropertySearchRequest.Locations[] locations = new PropertySearchRequest.Locations[]
                 {sydneyRegion};
 
-        for (int k = 0; k < locations.length; k++) {
-            log.debug("Location {} ", locations[k].region);
+        for (PropertySearchRequest.Locations location : locations) {
+            log.debug("Location {} ", location.region);
             PropertySearchRequest propertySearchRequest = new PropertySearchRequest();
             price = priceStart;
 
             while (price <= priceStop) {
-                if (price < 1000000 && locations[k].region.equals(regionalNSW.region)) {
+                if (price < 1000000 && location.region.equals(regionalNSW.region)) {
                     priceIncrementAmount = priceIncrementAmountSmallRegional;
-                } else if (price < 1000000 && locations[k].region.equals(sydneyRegion.region)) {
+                } else if (price < 1000000 && location.region.equals(sydneyRegion.region)) {
                     priceIncrementAmount = priceIncrementAmountSmallSydney;
                 } else if (price < 1000000) {
                     priceIncrementAmount = priceIncrementAmountSmall;
@@ -128,48 +134,24 @@ public class DailyPropertyScan {
                 propertySearchRequest.maxPrice = price + priceIncrementAmount;
                 propertySearchRequest.minLandArea = minLandSize;
                 propertySearchRequest.propertyTypes = propertyTypes;
-                propertySearchRequest.locations = new PropertySearchRequest.Locations[]{locations[k]};
-                searchJson = new SearchLocations().NSW(propertySearchRequest);
-                propertySearchRequest.page = 1;
-                if (domainSearchCount <= 450) {
-                    propertyListings = getDomainListing();
-                } else {
-                    domainKey++;
-                    if (domainKey >= authKey.length){
-                        domainKey = 1;
-                    }
-                    log.debug("Domain Key {} ", domainKey);
-                    getDomainAuth(domainKey);
-                    domainSearchCount = 0;
-                    propertyListings = getDomainListing();
-                }
+                propertySearchRequest.locations = new PropertySearchRequest.Locations[]{location};
+                PropertySearchRequest searchJson = new SearchLocations().NSW(propertySearchRequest);
+                
+                for (int i = 1; i < 6; i++) { // run through paginated results max 5 pages
+                    searchJson.page = i;
+                    String domainAuthString = getDomainAuth(domainAuthentication, authTokenString, domainKey, domainSearchCount);
+                    PropertyListingDTO[] propertyListings = getDomainListing(domainListingService, domainAuthString, searchJson);
 
-                if (propertyListings != null && propertyListings.length > 0){
-                    log.debug("{} Pages 1 {}", price, propertyListings.length);
-                    for (int l = 0; l < propertyListings.length; l++) {
-                        propertyListing = modelMapper.map(propertyListings[l], PropertyListing.class);
-                        if (propertyListing != null && propertyListing.getDomainListingId() != 0) {
-                            propertyListingService.savePropertyListing(propertyListing);
-                        } else {
-                            log.debug("Cannot save NULL LISTING {}", propertyListing.toString());
-                        }
-                    }
-                }
-                int i = 1;
-                while (propertyListings != null && propertyListings.length >= 200 && i < 5) {
-                    i++;
-                    propertySearchRequest.page = i;
-                    propertyListings = getDomainListing();
-                    if (propertyListings != null && propertyListings.length > 0) {
+                    if (propertyListings != null && propertyListings.length > 0) { // check if there are results to add
+                        propertyListingList.clear();
+                        //propertyListingList.addAll(Arrays.asList(propertyListings));
+                        propertyListingList = addPlanningPortalAddress(planningPortalAddressSearch, Arrays.asList(propertyListings));
+                        propertyListingList = addAdditionalPropertyFields(propertyInformationService, propertyListingList);
+                        saveDatabasePoint(propertyListingService, propertyListingList);
                         log.debug("{} Pages {} {}", price, i, propertyListings.length);
-                        for (int m = 0; m < propertyListings.length; m++) {
-                            propertyListing = modelMapper.map(propertyListings[m], PropertyListing.class);
-                            if (propertyListing != null && propertyListing.getDomainListingId() != 0) {
-                                propertyListingService.savePropertyListing(propertyListing);
-                            } else {
-                                log.debug("Cannot save NULL LISTING {}", propertyListing.toString());
-                            }
-                        }
+                    }
+                    if (propertyListings == null || propertyListings.length < PAGE_SIZE) {
+                        break; // exit the loop if there are less than the max results or no results
                     }
                 }
                 price += priceIncrementAmount;
@@ -178,7 +160,7 @@ public class DailyPropertyScan {
     }
 
     public void getListingsCommercialNSW() throws Exception {
-        searchJsonCommercial = new PropertySearchCommercialRequest();
+        PropertySearchCommercialRequest searchJsonCommercial = new PropertySearchCommercialRequest();
         searchJsonCommercial.searchMode = "forSale";
         PropertySearchCommercialRequest.PriceSearch priceSearch = new PropertySearchCommercialRequest.PriceSearch();
         priceSearch.min = 100000;
@@ -194,10 +176,7 @@ public class DailyPropertyScan {
                 "vacantLand"
         };
         searchJsonCommercial.landAreaMin = 100;
-        searchJsonCommercial.pageSize = 200;
-
-        getDomainAuth(domainKey);
-        log.debug("Get Domain Key {} ", domainKey);
+        searchJsonCommercial.pageSize = PAGE_SIZE;
 
         PropertySearchCommercialRequest.LocationSearch sydneyRegion = new PropertySearchCommercialRequest.LocationSearch();
         sydneyRegion.state = "NSW";
@@ -214,74 +193,122 @@ public class DailyPropertyScan {
         PropertySearchCommercialRequest.LocationSearch[] locations = new PropertySearchCommercialRequest.LocationSearch[]
                 {sydneyRegion};
 
-        for (int k = 0; k < locations.length; k++) {
-            log.debug("Location ", locations[k].region);
-            searchJsonCommercial.locations = new PropertySearchCommercialRequest.LocationSearch[]{locations[k]};
-            searchJsonCommercial.page = 1;
-            if (domainSearchCount <= 450) {
-                propertyListings = getDomainListingCommercial();
-            } else {
-                domainKey++;
-                if (domainKey >= authKey.length){
-                    domainKey = 1;
-                }
-                log.debug("Domain Key {} ", domainKey);
-                getDomainAuth(domainKey);
-                domainSearchCount = 0;
-                propertyListings = getDomainListingCommercial();
-            }
+        for (PropertySearchCommercialRequest.LocationSearch location : locations) {
+            log.debug("Location {} ", location.region);
+            searchJsonCommercial.locations = new PropertySearchCommercialRequest.LocationSearch[]{location};
 
-            if (propertyListings != null && propertyListings.length > 0){
-                log.debug("Pages 1 {}", propertyListings.length);
-                for (int l = 0; l < propertyListings.length; l++) {
-                    propertyListing = modelMapper.map(propertyListings[l], PropertyListing.class);
-                    if (propertyListing != null && propertyListing.getDomainListingId() != 0) {
-                        propertyListingService.savePropertyListing(propertyListing);
-                    } else {
-                        log.debug("Cannot save NULL LISTING {}", propertyListing.toString());
-                    }
+            for (int i = 1; i < 6; i++) { // run through paginated results max 5 pages
+                searchJsonCommercial.page = i;
+                String domainAuthString = getDomainAuth(domainAuthentication, authTokenString, domainKey, domainSearchCount);
+                PropertyListingDTO[] propertyListings = getDomainListing(domainListingService, domainAuthString, searchJsonCommercial);
+
+                if (propertyListings != null && propertyListings.length > 0) { // check if there are results to add
+                    propertyListingList.clear();
+                    //propertyListingList.addAll(Arrays.asList(propertyListings));
+                    propertyListingList = addPlanningPortalAddress(planningPortalAddressSearch, Arrays.asList(propertyListings));
+                    propertyListingList = addAdditionalPropertyFields(propertyInformationService, propertyListingList);
+                    saveDatabasePoint(propertyListingService, propertyListingList);
+                    log.debug("Pages {} {}", i, propertyListings.length);
+                }
+                if (propertyListings == null || propertyListings.length < PAGE_SIZE) {
+                    break; // exit the loop if there are less than the max results or no results
                 }
             }
-            int i = 1;
-            while (propertyListings != null && propertyListings.length >= 200 && i < 5) {
-                i++;
-                searchJsonCommercial.page = i;
-                propertyListings = getDomainListingCommercial();
-                if (propertyListings != null && propertyListings.length > 0) {
-                    log.debug("Pages {} {}", i, propertyListings.length);
-                    for (int m = 0; m < propertyListings.length; m++) {
-                        propertyListing = modelMapper.map(propertyListings[m], PropertyListing.class);
-                        if (propertyListing != null && propertyListing.getDomainListingId() != 0) {
-                            propertyListingService.savePropertyListing(propertyListing);
-                        } else {
-                            log.debug("Cannot save NULL LISTING {}", propertyListing.toString());
-                        }
-                    }
+        }
+
+        if (propertyListingList != null) {
+            System.out.println("Commercial property listings complete " + propertyListingList.size());
+        }
+    }
+
+
+    private String getDomainAuth(IDomainAuthentication domainAuthentication, String currentAuthString, 
+            Integer key, Integer apiRequestCount) throws Exception {
+        if (apiRequestCount == 0) {
+            return domainAuthentication.getAuthToken(authKey[key]).access_token;
+        } else if (apiRequestCount > 450) { //max 500 requests per api key
+            key++;
+            if (key >= authKey.length) {
+                key = 0;
+            }
+            domainSearchCount = 0;
+            System.out.println("Domain Key Change" + key);
+            return domainAuthentication.getAuthToken(authKey[key]).access_token;
+        } else {
+            return currentAuthString;
+        }
+    }
+
+    private PropertyListingDTO[] getDomainListing(IDomainListingService domainListingService, String authToken,
+            PropertySearchRequest searchJson) throws Exception {
+        domainSearchCount++;
+        authTokenString = authToken;
+        return (domainListingService.getPropertyList(authToken, searchJson));
+    }
+
+    private PropertyListingDTO[] getDomainListing(IDomainListingService domainListingService, String authToken,
+            PropertySearchCommercialRequest searchJsonCommercial) throws Exception {
+        domainSearchCount++;
+        return(domainListingService.getPropertyList(authToken, searchJsonCommercial));
+    }
+
+    private List<PropertyListingDTO> addPlanningPortalAddress(IPlanningPortalAddressSearch planningPortalAddressSearch, List<PropertyListingDTO> propertyListings) throws Exception {
+        return(planningPortalAddressSearch.getFormattedAddressMultiThreaded(propertyListings));
+    }
+
+    private List<PropertyListingDTO> addAdditionalPropertyFields(PropertyInformationService propertyInformationService, List<PropertyListingDTO> propertyListings) throws Exception {
+        for (PropertyListingDTO propertyListingDTO : propertyListings) {
+            if (propertyListingDTO.getPlanningPortalPropId() != null) {
+                try {
+                PropertyInformation propertyInformation = propertyInformationService.
+                    getPropertyInformation(Integer.parseInt(propertyListingDTO.getPlanningPortalPropId()));
+                    propertyListingDTO.setFloorSpaceRatio(propertyInformation.getFloorSpaceRatio()); 
+                    propertyListingDTO.setLandValue(propertyInformation.getLandValue1());
+                    propertyListingDTO.setZone(propertyInformation.getZoneCode());
+                } catch (Exception e){
+                    log.error("Can't find property {} ", e.getLocalizedMessage());
                 }
+            }
+        }
+        return (propertyListings);
+    }
+
+
+
+    private void saveDatabasePoint(PropertyListingService propertyListingService, List<PropertyListingDTO>  propertyListings) throws Exception {
+        for (PropertyListingDTO propertyListingDTO : propertyListings) {
+            PropertyListing propertyListing = modelMapper.map(propertyListingDTO, PropertyListing.class);
+            if (propertyListing != null && propertyListing.getDomainListingId() != 0) {
+                propertyListingService.savePropertyListing(propertyListing);
+            } else {
+                log.debug("Cannot save NULL LISTING {}", propertyListing.toString());
             }
         }
     }
 
-    private void getDomainAuth(Integer key) throws Exception {
-        DomainAuthentication domainAuthentication = new DomainAuthentication();
-        DomainTokenAuthResponse domainTokenAuthResponse = domainAuthentication.getAuthToken(authKey[key]);
-        authToken = domainTokenAuthResponse.access_token;
-    }
+        // private PropertyListing[] filterProperties(PropertyListing[] pListings) {
+    //     FilterProperties filterProperties = new FilterProperties();
+    //     return (filterProperties.filterProperties(pListings));
+    // }
 
-    private PropertyListingDTO[] getDomainListing() throws Exception {
-        domainSearchCount++;
-        return (domainListingService.getPropertyList(authToken, searchJson));
-    }
+    // private void addPlanningPortalAddress() throws Exception {
+    //     PropertyListingDTO[] propertyListingDTOs = getPlanningPortalAddress();
+    //     PropertyListing propertyListingLocal = new PropertyListing();
+    //     for (int q = 0; q < propertyListingDTOs.length; q++) {
+    //         propertyListingLocal = modelMapper.map(propertyListingDTOs[q], PropertyListing.class);
+    //         if (propertyListingLocal != null && propertyListing.getDomainListingId() != 0) {
+    //             propertyListingService.updatePropertyListing(propertyListing);
+    //         }
+    //     }
+    // }
 
-    private PropertyListingDTO[] getDomainListingCommercial() throws Exception {
-        domainSearchCount++;
-        return (domainListingService.getPropertyList(authToken, searchJsonCommercial));
-    }
 
-    // private PropertyListing[] addPlanningPortalAddress(PropertyListing[] pListings) throws Exception {
+    // private PropertyListingDTO[] getPlanningPortalAddress() throws Exception {
     //     propertyListingList = propertyListingService.getAllListings();
+    //     //List<PropertyListingDTO> test = Arrays.asList(modelMapper.map(propertyListingList, PropertyListingDTO[].class));
+    //     PropertyListingDTO[]  test1 = modelMapper.map(propertyListingList, PropertyListingDTO[].class);
     //     PlanningPortalAddressSearch planningPortalAddressSearch = new PlanningPortalAddressSearch();
-    //     return (planningPortalAddressSearch.getFormattedAddressMultiThreaded(pListings));
+    //     return (planningPortalAddressSearch.getFormattedAddress(test1));
     // }
    
 }

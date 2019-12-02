@@ -1,13 +1,13 @@
 package com.majoapps.propertyfinderdailyscan.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 @Entity
@@ -18,8 +18,10 @@ public class PropertyListing {
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @JsonIgnore
     @Column(name="time_date")
     private String timeDate;
+    @JsonIgnore
     @Column(name="domain_listing_id")
     private Integer domainListingId;
     @Column(name="price")
@@ -58,4 +60,12 @@ public class PropertyListing {
     private String planningPortalPropId;
     @Column(name="planning_portal_address")
     private String planningPortalAddress;
+    @Column(name="zone")
+    private String zone;
+    @Column(name="floor_space_ratio")
+    private BigDecimal floorSpaceRatio;
+    @Column(name="minimum_lot_size")
+    private String minimumLotSize;
+    @Column(name="land_value")
+    private Integer landValue;
 }
