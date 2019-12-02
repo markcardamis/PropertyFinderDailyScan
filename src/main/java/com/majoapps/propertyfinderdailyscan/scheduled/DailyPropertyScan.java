@@ -114,7 +114,7 @@ public class DailyPropertyScan {
                 {sydneyRegion, illawarraSouthCoast, hunterCentralNorthCoasts, regionalNSW};
 
         for (PropertySearchRequest.Locations location : locations) {
-            log.debug("Location {} ", location.region);
+            log.info("Location {} ", location.region);
             PropertySearchRequest propertySearchRequest = new PropertySearchRequest();
             price = priceStart;
 
@@ -148,7 +148,7 @@ public class DailyPropertyScan {
                         propertyListingList = addPlanningPortalAddress(planningPortalAddressSearch, Arrays.asList(propertyListings));
                         propertyListingList = addAdditionalPropertyFields(propertyInformationService, propertyListingList);
                         saveDatabasePoint(propertyListingService, propertyListingList);
-                        log.debug("{} Pages {} {}", price, i, propertyListings.length);
+                        log.info("{} Pages {} {}", price, i, propertyListings.length);
                     }
                     if (propertyListings == null || propertyListings.length < PAGE_SIZE) {
                         break; // exit the loop if there are less than the max results or no results
