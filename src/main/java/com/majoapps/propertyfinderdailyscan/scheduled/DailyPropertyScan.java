@@ -111,7 +111,7 @@ public class DailyPropertyScan {
         regionalNSW.state = "NSW";
         regionalNSW.region = "Regional NSW";
         PropertySearchRequest.Locations[] locations = new PropertySearchRequest.Locations[]
-                {sydneyRegion};
+                {sydneyRegion, illawarraSouthCoast, hunterCentralNorthCoasts, regionalNSW};
 
         for (PropertySearchRequest.Locations location : locations) {
             log.debug("Location {} ", location.region);
