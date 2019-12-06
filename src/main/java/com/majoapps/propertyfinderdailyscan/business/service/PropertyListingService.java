@@ -4,10 +4,12 @@ import com.majoapps.propertyfinderdailyscan.data.entity.PropertyListing;
 import com.majoapps.propertyfinderdailyscan.data.repository.PropertyListingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
 
+@Slf4j
 @Service
 public class PropertyListingService {
 
@@ -31,7 +33,14 @@ public class PropertyListingService {
     }
 
     public PropertyListing savePropertyListing(PropertyListing propertyListing) {
-        return this.propertyListingRepository.save(propertyListing);
+        List<PropertyListing> propertyListingResponse = propertyListingRepository
+            .findByDomainListingId(propertyListing.getDomainListingId());
+        if (propertyListingResponse.isEmpty()) { 
+            return this.propertyListingRepository.save(propertyListing);
+        } else {
+            log.info("Duplicate domainlistingId {} ", propertyListing.getDomainListingId());
+            return propertyListingResponse.get(0);
+        }
     }
 
     public PropertyListing updatePropertyListing(PropertyListing propertyListingNew) {
