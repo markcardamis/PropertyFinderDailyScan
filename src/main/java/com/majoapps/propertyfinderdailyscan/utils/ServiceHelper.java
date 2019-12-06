@@ -7,7 +7,6 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

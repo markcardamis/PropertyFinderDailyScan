@@ -1,11 +1,4 @@
 // package com.majoapps.propertyfinderdailyscan.business.service;
-
-// import java.util.ArrayList;
-// import java.util.Collections;
-// import java.util.List;
-// import java.util.concurrent.ExecutorService;
-// import java.util.concurrent.Executors;
-
 // import com.google.gson.Gson;
 // import com.majoapps.propertyfinderdailyscan.business.domain.PlanningPortalZoneResponse;
 // import com.majoapps.propertyfinderdailyscan.business.domain.PropertyListing;
@@ -15,7 +8,11 @@
 // import com.majoapps.propertyfinderdailyscan.utils.IServiceHelper;
 // import com.majoapps.propertyfinderdailyscan.utils.ServiceHelper;
 // import com.majoapps.propertyfinderdailyscan.utils.UrlExtensionMethods;
-
+// import java.util.ArrayList;
+// import java.util.Collections;
+// import java.util.List;
+// import java.util.concurrent.ExecutorService;
+// import java.util.concurrent.Executors;
 // import lombok.extern.slf4j.Slf4j;
 
 // @Slf4j

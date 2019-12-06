@@ -1,9 +1,8 @@
 package com.majoapps.propertyfinderdailyscan.business.domain;
 
+import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
-
-import com.google.gson.annotations.SerializedName;
 
 public class PropertyListingCommercialResponse implements Serializable {
 

@@ -1,9 +1,7 @@
 package com.majoapps.propertyfinderdailyscan.business.domain;
 
-import java.math.BigDecimal;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
-
+import java.math.BigDecimal;
 import lombok.Data;
 
 @Data

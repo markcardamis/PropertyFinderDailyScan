@@ -12,12 +12,9 @@ import com.majoapps.propertyfinderdailyscan.utils.IServiceHelper;
 import com.majoapps.propertyfinderdailyscan.utils.PriceMethods;
 import com.majoapps.propertyfinderdailyscan.utils.ServiceHelper;
 import com.majoapps.propertyfinderdailyscan.utils.StringCheck;
-
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Service;
-
 import lombok.extern.slf4j.Slf4j;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;

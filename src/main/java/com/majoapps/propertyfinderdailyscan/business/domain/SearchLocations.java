@@ -1,7 +1,6 @@
 package com.majoapps.propertyfinderdailyscan.business.domain;
 
 import org.apache.commons.lang3.ArrayUtils;
-
 import java.time.LocalDate;
 import java.util.Optional;
 

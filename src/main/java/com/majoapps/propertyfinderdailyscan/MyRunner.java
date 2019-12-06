@@ -1,7 +1,6 @@
 package com.majoapps.propertyfinderdailyscan;
 
 import com.majoapps.propertyfinderdailyscan.scheduled.DailyPropertyScan;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.web.client.RestTemplateBuilder;
