@@ -12,6 +12,7 @@ public class PropertyListingDTO {
     public String timeDate;
     public Integer domainListingId;
     public String price;
+    public Integer priceInt;
     public String listingURL;
     public String listingPhoto;
     public String address;

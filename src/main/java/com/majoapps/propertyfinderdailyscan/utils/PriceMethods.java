@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PriceMethods
 {
-    public static Integer stringToInteger(String text) throws Exception {
+    public static Integer priceStringToInteger(String text) throws Exception {
 
         String errorNumber = "0";
 

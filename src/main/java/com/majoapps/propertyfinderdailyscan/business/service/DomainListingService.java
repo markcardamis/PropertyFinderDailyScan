@@ -68,6 +68,7 @@ public class DomainListingService implements IDomainListingService
                         propertyListings[i].area = propertyListingResponse[i].listing.propertyDetails.landArea;
                         propertyListings[i].postCode = propertyListingResponse[i].listing.propertyDetails.postcode;
                         propertyListings[i].price = propertyListingResponse[i].listing.priceDetails.displayPrice;
+                        propertyListings[i].priceInt = PriceMethods.priceStringToInteger(propertyListingResponse[i].listing.priceDetails.displayPrice);
                         propertyListings[i].listingURL = "https://www.domain.com.au/" +
                                     propertyListingResponse[i].listing.listingSlug;
                         propertyListings[i].listingPhoto = ((propertyListingResponse[i].listing.media == null) || (propertyListingResponse[i].listing.media.isEmpty())
