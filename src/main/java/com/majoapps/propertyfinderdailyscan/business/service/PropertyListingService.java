@@ -43,6 +43,17 @@ public class PropertyListingService {
         }
     }
 
+    public PropertyListing findDomainListing(PropertyListing propertyListing) {
+        List<PropertyListing> propertyListingResponse = propertyListingRepository
+            .findByDomainListingId(propertyListing.getDomainListingId());
+        if (propertyListingResponse.isEmpty()) { 
+            return this.propertyListingRepository.save(propertyListing);
+        } else {
+            log.info("Duplicate domainlistingId {} ", propertyListing.getDomainListingId());
+            return propertyListingResponse.get(0);
+        }
+    }
+
     public PropertyListing updatePropertyListing(PropertyListing propertyListingNew) {
         List<PropertyListing> propertyListingResponse = propertyListingRepository
             .findByDomainListingId(propertyListingNew.getDomainListingId());
@@ -50,10 +61,10 @@ public class PropertyListingService {
         if (propertyListingResponse.isEmpty()) { 
             return (propertyListingRepository.save(propertyListingNew));
         } else {
-            propertyListingEntity.setId(propertyListingNew.getId());
+            propertyListingEntity.setId(propertyListingResponse.get(0).getId());
             if(propertyListingNew.getTimeDate() != null) 
                 propertyListingEntity.setTimeDate(propertyListingNew.getTimeDate());
-            if(propertyListingNew.getDomainListingId() != 0) 
+            if(propertyListingNew.getDomainListingId() != null && propertyListingNew.getDomainListingId() != 0) 
                 propertyListingEntity.setDomainListingId(propertyListingNew.getDomainListingId());
             if(propertyListingNew.getPrice() != null) 
                 propertyListingEntity.setPrice(propertyListingNew.getPrice());
@@ -73,13 +84,13 @@ public class PropertyListingService {
                 propertyListingEntity.setSuburbName(propertyListingNew.getSuburbName());
             if(propertyListingNew.getPostCode() != null) 
                 propertyListingEntity.setPostCode(propertyListingNew.getPostCode());
-            if(propertyListingNew.getArea() != 0) 
+            if(propertyListingNew.getArea() != null && propertyListingNew.getArea() != 0) 
                 propertyListingEntity.setArea(propertyListingNew.getArea());
-            if(propertyListingNew.getBathrooms() != 0) 
+            if(propertyListingNew.getBathrooms() != null && propertyListingNew.getBathrooms() != 0) 
                 propertyListingEntity.setBathrooms(propertyListingNew.getBathrooms());
-            if(propertyListingNew.getBedrooms() != 0) 
+            if(propertyListingNew.getBedrooms() != null && propertyListingNew.getBedrooms() != 0) 
                 propertyListingEntity.setBedrooms(propertyListingNew.getBedrooms());
-            if(propertyListingNew.getCarspaces() != 0) 
+            if(propertyListingNew.getCarspaces() != null && propertyListingNew.getCarspaces() != 0) 
                 propertyListingEntity.setCarspaces(propertyListingNew.getCarspaces());
             if(propertyListingNew.getLatitude() != null) 
                 propertyListingEntity.setLatitude(propertyListingNew.getLatitude());
@@ -91,6 +102,18 @@ public class PropertyListingService {
                 propertyListingEntity.setPlanningPortalPropId(propertyListingNew.getPlanningPortalPropId());
             if(propertyListingNew.getPlanningPortalAddress() != null) 
                 propertyListingEntity.setPlanningPortalAddress(propertyListingNew.getPlanningPortalAddress());
+            if(propertyListingNew.getZone() != null) 
+                propertyListingEntity.setZone(propertyListingNew.getZone());
+            if(propertyListingNew.getFloorSpaceRatio() != null) 
+                propertyListingEntity.setFloorSpaceRatio(propertyListingNew.getFloorSpaceRatio());
+            if(propertyListingNew.getMinimumLotSize() != null) 
+                propertyListingEntity.setMinimumLotSize(propertyListingNew.getMinimumLotSize());
+            if(propertyListingNew.getLandValue() != null && propertyListingNew.getLandValue() != 0) 
+                propertyListingEntity.setLandValue(propertyListingNew.getLandValue());
+            if(propertyListingNew.getPricePSM() != null && propertyListingNew.getPricePSM() != 0) 
+                propertyListingEntity.setPricePSM(propertyListingNew.getPricePSM());
+            if(propertyListingNew.getPriceToLandValue() != null) 
+                propertyListingEntity.setPriceToLandValue(propertyListingNew.getPriceToLandValue());
 
             return (propertyListingRepository.save(propertyListingNew));        
         }

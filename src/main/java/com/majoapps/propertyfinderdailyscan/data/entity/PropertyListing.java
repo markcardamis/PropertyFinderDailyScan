@@ -26,6 +26,7 @@ public class PropertyListing {
     private Integer domainListingId;
     @Column(name="price")
     private String price;
+    @JsonIgnore
     @Column(name="priceInt")
     private Integer priceInt;
     @Column(name="listing_url")
@@ -58,8 +59,10 @@ public class PropertyListing {
     private Double longitude;
     @Column(name="summary_description")
     private String summaryDescription;
+    @JsonIgnore
     @Column(name="planning_portal_id")
     private String planningPortalPropId;
+    @JsonIgnore
     @Column(name="planning_portal_address")
     private String planningPortalAddress;
     @Column(name="zone")
@@ -70,4 +73,8 @@ public class PropertyListing {
     private String minimumLotSize;
     @Column(name="land_value")
     private Integer landValue;
+    @Column(name="price_psm")
+    private Integer pricePSM;
+    @Column(name="price_to_land_value")
+    private BigDecimal priceToLandValue;
 }

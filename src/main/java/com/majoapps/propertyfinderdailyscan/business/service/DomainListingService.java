@@ -120,6 +120,7 @@ public class DomainListingService implements IDomainListingService
                     propertyListings[i].area = PriceMethods.convertStringToInteger(propertyListingResponse[i].propertyArea);
                     propertyListings[i].postCode = propertyListingResponse[i].metadata.addressComponents.postcode;
                     propertyListings[i].price = propertyListingResponse[i].price;
+                    propertyListings[i].priceInt = PriceMethods.priceStringToInteger(propertyListingResponse[i].price);
                     propertyListings[i].listingURL = propertyListingResponse[i].ad.url;
                     propertyListings[i].listingPhoto = ((propertyListingResponse[i].media == null || (propertyListingResponse[i].media.isEmpty()))
                             ? imageDefaultUrl : propertyListingResponse[i].media.get(0).imageUrl);

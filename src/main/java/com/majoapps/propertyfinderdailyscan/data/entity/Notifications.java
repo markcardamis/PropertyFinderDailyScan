@@ -19,25 +19,28 @@ public class Notifications extends AuditModel {
     @ManyToOne(targetEntity = Account.class)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
-    @Column(name="planning_zone")
-    private String planningZone;
+    @Column(name="property_zone")
+    private String propertyZone;
     @Column(name="property_area_min")
-    private int propertyAreaMin;
+    private Integer propertyAreaMin;
     @Column(name="property_area_max")
-    private int propertyAreaMax;
+    private Integer propertyAreaMax;
     @Column(name="property_price_min")
-    private int propertyPriceMin;
+    private Integer propertyPriceMin;
     @Column(name="property_price_max")
-    private int propertyPriceMax;
-    @Column(name="property_psm_min")
-    private int propertyPSMMin;
-    @Column(name="property_psm_max")
-    private int propertyPSMMax;
+    private Integer propertyPriceMax;
+    @Column(name="property_price_psm_min")
+    private Integer propertyPricePSMMin;
+    @Column(name="property_price_psm_max")
+    private Integer propertyPricePSMMax;
     @Column(name="property_post_code")
     private String propertyPostCode;
     @Column(name="property_price_to_land_value_min")
     private BigDecimal propertyPriceToLandValueMin;
     @Column(name="property_price_to_land_value_max")
     private BigDecimal propertyPriceToLandValueMax;
+    @Column(name="property_floor_space_ratio_min")
+    private BigDecimal propertyFloorSpaceRatioMin;
+    @Column(name="property_floor_space_ratio_max")
+    private BigDecimal propertyFloorSpaceRatioMax;
 }
-

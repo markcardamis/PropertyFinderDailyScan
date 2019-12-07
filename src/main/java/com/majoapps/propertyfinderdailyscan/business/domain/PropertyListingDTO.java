@@ -31,6 +31,6 @@ public class PropertyListingDTO {
     public String summaryDescription;
     public String planningPortalPropId;
     public String planningPortalAddress;
-    
-    private Boolean deleted;
+    public Integer pricePSM;
+    public BigDecimal priceToLandValue;
 }
