@@ -12,16 +12,18 @@ import com.majoapps.propertyfinderdailyscan.business.service.PropertyListingServ
 import com.majoapps.propertyfinderdailyscan.data.entity.PropertyInformation;
 import com.majoapps.propertyfinderdailyscan.data.entity.PropertyListing;
 import com.majoapps.propertyfinderdailyscan.utils.DateHelper;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -260,11 +262,23 @@ public class DailyPropertyScan {
         for (PropertyListingDTO propertyListingDTO : propertyListings) {
             if (propertyListingDTO.getPlanningPortalPropId() != null) {
                 try {
-                PropertyInformation propertyInformation = propertyInformationService.
-                    getPropertyInformation(Integer.parseInt(propertyListingDTO.getPlanningPortalPropId()));
+                    PropertyInformation propertyInformation = propertyInformationService.
+                        getPropertyInformation(Integer.parseInt(propertyListingDTO.getPlanningPortalPropId()));
                     propertyListingDTO.setFloorSpaceRatio(propertyInformation.getFloorSpaceRatio()); 
                     propertyListingDTO.setLandValue(propertyInformation.getLandValue1());
                     propertyListingDTO.setZone(propertyInformation.getZoneCode());
+                    
+                    // calculated fields for the PropertyListingDTO object
+                    if (propertyListingDTO.getPriceInt() != null && propertyListingDTO.getPriceInt() != 0 && 
+                            propertyListingDTO.getArea() != null && propertyListingDTO.getArea() != 0){
+                        propertyListingDTO.setPricePSM(propertyListingDTO.getPriceInt()/propertyListingDTO.getArea());
+                    }
+
+                    if (propertyListingDTO.getPriceInt() != null && propertyListingDTO.getPriceInt() != 0 && 
+                            propertyListingDTO.getLandValue() != null && propertyListingDTO.getLandValue() != 0){
+                        propertyListingDTO.setPriceToLandValue(BigDecimal.valueOf(propertyListingDTO.getPriceInt()).
+                            divide(BigDecimal.valueOf(propertyListingDTO.getLandValue()), 2, RoundingMode.CEILING));
+                    }
                 } catch (Exception e){
                     log.error("Can't find property {} ", e.getLocalizedMessage());
                 }
@@ -289,26 +303,6 @@ public class DailyPropertyScan {
         // private PropertyListing[] filterProperties(PropertyListing[] pListings) {
     //     FilterProperties filterProperties = new FilterProperties();
     //     return (filterProperties.filterProperties(pListings));
-    // }
-
-    // private void addPlanningPortalAddress() throws Exception {
-    //     PropertyListingDTO[] propertyListingDTOs = getPlanningPortalAddress();
-    //     PropertyListing propertyListingLocal = new PropertyListing();
-    //     for (int q = 0; q < propertyListingDTOs.length; q++) {
-    //         propertyListingLocal = modelMapper.map(propertyListingDTOs[q], PropertyListing.class);
-    //         if (propertyListingLocal != null && propertyListing.getDomainListingId() != 0) {
-    //             propertyListingService.updatePropertyListing(propertyListing);
-    //         }
-    //     }
-    // }
-
-
-    // private PropertyListingDTO[] getPlanningPortalAddress() throws Exception {
-    //     propertyListingList = propertyListingService.getAllListings();
-    //     //List<PropertyListingDTO> test = Arrays.asList(modelMapper.map(propertyListingList, PropertyListingDTO[].class));
-    //     PropertyListingDTO[]  test1 = modelMapper.map(propertyListingList, PropertyListingDTO[].class);
-    //     PlanningPortalAddressSearch planningPortalAddressSearch = new PlanningPortalAddressSearch();
-    //     return (planningPortalAddressSearch.getFormattedAddress(test1));
     // }
    
 }
