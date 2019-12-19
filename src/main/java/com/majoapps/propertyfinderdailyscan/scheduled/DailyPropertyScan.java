@@ -193,7 +193,7 @@ public class DailyPropertyScan {
         hunterCentralNorthCoasts.state = "NSW";
         hunterCentralNorthCoasts.region = "Hunter, Central & North Coasts";
         PropertySearchCommercialRequest.LocationSearch[] locations = new PropertySearchCommercialRequest.LocationSearch[]
-                {sydneyRegion};
+                {sydneyRegion, illawarraSouthCoast, hunterCentralNorthCoasts, regionalNSW};
 
         for (PropertySearchCommercialRequest.LocationSearch location : locations) {
             log.debug("Location {} ", location.region);
