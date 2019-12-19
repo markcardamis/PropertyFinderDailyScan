@@ -5,12 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PriceMethods
 {
+    private static final String errorNumber = "0";
+
     public static Integer priceStringToInteger(String text) throws Exception {
-
-        String errorNumber = "0";
-
         try {
-            if (text != null && !text.isEmpty() && text.matches(".*\\d.*")) {
+            if (text != null && text.length() > 0 && text.matches(".*\\d.*")) {
                 text = text.toLowerCase();
                 int firstIndex = text.indexOf('$');
                 if (firstIndex >= 0) { // found a $
@@ -60,7 +59,7 @@ public class PriceMethods
 
             text = removeMultipleDecimals(text);
         } catch (Exception e){
-            log.error("Exception : {} ", e);
+            log.error(" Cannot parse {} : {} ", text, e);
             return (int) Double.parseDouble(errorNumber);
         }
         return ((int) Double.parseDouble(text));
@@ -75,7 +74,11 @@ public class PriceMethods
                 text = text.substring(0, secondIndex);
             }
         }
-        return text;
+        if (text != null && text.length() > 0) {
+            return text;
+        } else {
+            return errorNumber;
+        }
     }
 
     public static Integer convertStringToInteger(String text) {

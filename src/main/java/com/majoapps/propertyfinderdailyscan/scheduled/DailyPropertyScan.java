@@ -146,7 +146,6 @@ public class DailyPropertyScan {
 
                     if (propertyListings != null && propertyListings.length > 0) { // check if there are results to add
                         propertyListingList.clear();
-                        //propertyListingList.addAll(Arrays.asList(propertyListings));
                         propertyListingList = addPlanningPortalAddress(planningPortalAddressSearch, Arrays.asList(propertyListings));
                         propertyListingList = addAdditionalPropertyFields(propertyInformationService, propertyListingList);
                         saveDatabasePoint(propertyListingService, propertyListingList);
@@ -206,7 +205,6 @@ public class DailyPropertyScan {
 
                 if (propertyListings != null && propertyListings.length > 0) { // check if there are results to add
                     propertyListingList.clear();
-                    //propertyListingList.addAll(Arrays.asList(propertyListings));
                     propertyListingList = addPlanningPortalAddress(planningPortalAddressSearch, Arrays.asList(propertyListings));
                     propertyListingList = addAdditionalPropertyFields(propertyInformationService, propertyListingList);
                     saveDatabasePoint(propertyListingService, propertyListingList);
