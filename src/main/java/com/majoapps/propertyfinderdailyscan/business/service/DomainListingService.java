@@ -76,7 +76,7 @@ public class DomainListingService implements IDomainListingService
                         propertyListings[i].latitude = ((propertyListingResponse[i].listing.propertyDetails.latitude == null) || (propertyListingResponse[i].listing.propertyDetails.latitude.isNaN())
                         ? latitudeDefault : propertyListingResponse[i].listing.propertyDetails.latitude);
                         propertyListings[i].longitude = ((propertyListingResponse[i].listing.propertyDetails.longitude == null) || (propertyListingResponse[i].listing.propertyDetails.longitude.isNaN())
-                        ? latitudeDefault : propertyListingResponse[i].listing.propertyDetails.longitude);
+                        ? longitudeDefault : propertyListingResponse[i].listing.propertyDetails.longitude);
                         propertyListings[i].bathrooms = propertyListingResponse[i].listing.propertyDetails.bathrooms;
                         propertyListings[i].bedrooms = propertyListingResponse[i].listing.propertyDetails.bedrooms;
                         propertyListings[i].carspaces = propertyListingResponse[i].listing.propertyDetails.carspaces;
@@ -129,8 +129,10 @@ public class DomainListingService implements IDomainListingService
                     propertyListings[i].listingPhoto = ((propertyListingResponse[i].media == null || (propertyListingResponse[i].media.isEmpty()))
                             ? imageDefaultUrl : propertyListingResponse[i].media.get(0).imageUrl);
                     propertyListings[i].summaryDescription = propertyListingResponse[i].headline;
-                    propertyListings[i].latitude = propertyListingResponse[i].geoLocation.latitude;
-                    propertyListings[i].longitude = propertyListingResponse[i].geoLocation.longitude;
+                    propertyListings[i].latitude = ((propertyListingResponse[i].geoLocation.latitude == null) || (propertyListingResponse[i].geoLocation.latitude.isNaN())
+                        ? latitudeDefault : propertyListingResponse[i].geoLocation.latitude);
+                    propertyListings[i].longitude = ((propertyListingResponse[i].geoLocation.longitude == null) || (propertyListingResponse[i].geoLocation.longitude.isNaN())
+                        ? longitudeDefault : propertyListingResponse[i].geoLocation.longitude);
                     propertyListings[i].bathrooms = 0.0;
                     propertyListings[i].bedrooms = 0.0;
                     propertyListings[i].carspaces = propertyListingResponse[i].carspaceCount;
