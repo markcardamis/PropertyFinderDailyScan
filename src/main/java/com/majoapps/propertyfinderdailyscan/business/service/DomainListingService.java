@@ -27,6 +27,8 @@ public class DomainListingService implements IDomainListingService
     private final SimpleDateFormat ISO_8601_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:sss'Z'", new Locale("AU"));
     private final String timeDate = ISO_8601_FORMAT.format(new Date());
     private final String imageDefaultUrl = "https://cdn.pixabay.com/photo/2013/07/12/14/47/house-148791_960_720.png";
+    private final Double latitudeDefault = -33.856159;
+    private final Double longitudeDefault = 151.215256;
 
     public DomainListingService() throws Exception {
         mServiceHelper = new ServiceHelper();
@@ -71,8 +73,10 @@ public class DomainListingService implements IDomainListingService
                         propertyListings[i].listingPhoto = ((propertyListingResponse[i].listing.media == null) || (propertyListingResponse[i].listing.media.isEmpty())
                                     ? imageDefaultUrl : propertyListingResponse[i].listing.media.get(0).url);
                         propertyListings[i].summaryDescription = Jsoup.parse(propertyListingResponse[i].listing.summaryDescription.toLowerCase()).text();
-                        propertyListings[i].latitude = propertyListingResponse[i].listing.propertyDetails.latitude;
-                        propertyListings[i].longitude = propertyListingResponse[i].listing.propertyDetails.longitude;
+                        propertyListings[i].latitude = ((propertyListingResponse[i].listing.propertyDetails.latitude == null) || (propertyListingResponse[i].listing.propertyDetails.latitude.isNaN())
+                        ? latitudeDefault : propertyListingResponse[i].listing.propertyDetails.latitude);
+                        propertyListings[i].longitude = ((propertyListingResponse[i].listing.propertyDetails.longitude == null) || (propertyListingResponse[i].listing.propertyDetails.longitude.isNaN())
+                        ? latitudeDefault : propertyListingResponse[i].listing.propertyDetails.longitude);
                         propertyListings[i].bathrooms = propertyListingResponse[i].listing.propertyDetails.bathrooms;
                         propertyListings[i].bedrooms = propertyListingResponse[i].listing.propertyDetails.bedrooms;
                         propertyListings[i].carspaces = propertyListingResponse[i].listing.propertyDetails.carspaces;
