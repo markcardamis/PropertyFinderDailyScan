@@ -12,6 +12,7 @@ logs/
 .project
 .settings
 .vscode
+gradle.properties
 *.icloud
 node_modules/
 serviceAccountKey.json

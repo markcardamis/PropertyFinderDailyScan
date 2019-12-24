@@ -9,7 +9,7 @@ public class StringCheck {
     }
 
     public static boolean isNotNullOrEmpty(String str) {
-        return(str != null && !str.isEmpty());
+        return(str != null && !str.isEmpty() && str.length() > 0);
     }
 
     public static String concatWhenNotNull (String originalString, String stringAdded, String delimiter) {
