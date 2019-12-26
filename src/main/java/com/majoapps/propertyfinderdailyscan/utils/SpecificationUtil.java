@@ -81,33 +81,39 @@ public class SpecificationUtil {
     }
 
     private static String roadString (String roadString) {
-        roadString = roadString.replaceAll("ALLEY", "ALLY");
-        roadString = roadString.replaceAll("ARCADE", "ARC");
-        roadString = roadString.replaceAll("AVENUE", "AVE");
-        roadString = roadString.replaceAll("BOULEVARD", "BVD");
-        roadString = roadString.replaceAll("BYPASS", "BYPA");
-        roadString = roadString.replaceAll("CIRCUIT", "CCT");
-        roadString = roadString.replaceAll("CLOSE", "CL");
-        roadString = roadString.replaceAll("CORNER", "CRN");
-        roadString = roadString.replaceAll("COURT", "CT");
-        roadString = roadString.replaceAll("CRESCENT", "CRES");
-        roadString = roadString.replaceAll("CUL-DE-SAC", "CDS");
-        roadString = roadString.replaceAll("DRIVE", "DR");
-        roadString = roadString.replaceAll("ESPLANADE", "ESP");
-        roadString = roadString.replaceAll("GREEN", "GRN");
-        roadString = roadString.replaceAll("GROVE", "GR");
-        roadString = roadString.replaceAll("HIGHWAY", "HWY");
-        roadString = roadString.replaceAll("JUNCTION", "JNC");
-        roadString = roadString.replaceAll("LANE", "LANE");
-        roadString = roadString.replaceAll("LINK", "LINK");
-        roadString = roadString.replaceAll("MEWS", "MEWS");
-        roadString = roadString.replaceAll("PARADE", "PDE");
-        roadString = roadString.replaceAll("PLACE", "PL");
-        roadString = roadString.replaceAll("RIDGE", "RDGE");
-        roadString = roadString.replaceAll("ROAD", "RD");
-        roadString = roadString.replaceAll("SQUARE", "SQ");
-        roadString = roadString.replaceAll("STREET", "ST");
-        roadString = roadString.replaceAll("TERRACE", "TCE");
+        String returnRoadString[] = roadString.split("\\ ");
+        if (returnRoadString.length > 1) {
+            String result = roadString.substring(0,roadString.lastIndexOf(" "));
+            String tempString = returnRoadString[returnRoadString.length - 1];
+            tempString = tempString.replaceFirst("ALLEY", "ALLY");
+            tempString = tempString.replaceFirst("ARCADE", "ARC");
+            tempString = tempString.replaceFirst("AVENUE", "AVE");
+            tempString = tempString.replaceFirst("BOULEVARD", "BVD");
+            tempString = tempString.replaceFirst("BYPASS", "BYPA");
+            tempString = tempString.replaceFirst("CIRCUIT", "CCT");
+            tempString = tempString.replaceFirst("CLOSE", "CL");
+            tempString = tempString.replaceFirst("CORNER", "CRN");
+            tempString = tempString.replaceFirst("COURT", "CT");
+            tempString = tempString.replaceFirst("CRESCENT", "CRES");
+            tempString = tempString.replaceFirst("CUL-DE-SAC", "CDS");
+            tempString = tempString.replaceFirst("DRIVE", "DR");
+            tempString = tempString.replaceFirst("ESPLANADE", "ESP");
+            tempString = tempString.replaceFirst("GREEN", "GRN");
+            tempString = tempString.replaceFirst("GROVE", "GR");
+            tempString = tempString.replaceFirst("HIGHWAY", "HWY");
+            tempString = tempString.replaceFirst("JUNCTION", "JNC");
+            tempString = tempString.replaceFirst("LANE", "LANE");
+            tempString = tempString.replaceFirst("LINK", "LINK");
+            tempString = tempString.replaceFirst("MEWS", "MEWS");
+            tempString = tempString.replaceFirst("PARADE", "PDE");
+            tempString = tempString.replaceFirst("PLACE", "PL");
+            tempString = tempString.replaceFirst("RIDGE", "RDGE");
+            tempString = tempString.replaceFirst("ROAD", "RD");
+            tempString = tempString.replaceFirst("SQUARE", "SQ");
+            tempString = tempString.replaceFirst("STREET", "ST");
+            tempString = tempString.replaceFirst("TERRACE", "TCE");
+            roadString = result + " " + tempString;
+        } 
         roadString = roadString.replaceAll("  ", " ");
         return roadString;
     }

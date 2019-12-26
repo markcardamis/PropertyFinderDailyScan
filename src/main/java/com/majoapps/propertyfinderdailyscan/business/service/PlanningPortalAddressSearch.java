@@ -24,8 +24,6 @@ public class PlanningPortalAddressSearch {
 
     public List<PropertyListingDTO> addPlanningPortalId(List<PropertyListingDTO> propertyListings) throws Exception{
 
-        System.out.println("portalId size " + propertyListings.size());
-
         // Get Planning portal zone info
         if (propertyListings != null && propertyListings.size() > 0){
             for (PropertyListingDTO propertyListing : propertyListings) {
@@ -38,13 +36,7 @@ public class PlanningPortalAddressSearch {
                     propertyListing.getPostCode() != null &&
                     propertyListing.getPostCode().length() > 0) {
 
-
-                    
-                    System.out.println("Check Address UnFormat " + propertyListing.getAddress());
-
-
                     String addressFormat = SpecificationUtil.createAddressString(propertyListing);
-                    System.out.println("Check Address Formated " + addressFormat);
 
                     List<String> returnAddressList = propertyInformationRepository.findByAddress(
                         SpecificationUtil.createAddressString(propertyListing));
@@ -55,8 +47,6 @@ public class PlanningPortalAddressSearch {
                     //         SpecificationUtil.createAddressString(propertyListing));
                     // }
 
-                    System.out.println("Found Address database " + returnAddressList.size());
-
                     for (String returnAddress : returnAddressList) {
                         String returnAddreses[] = returnAddress.split("\\,");
                         if (returnAddreses.length == 2) {
@@ -65,8 +55,6 @@ public class PlanningPortalAddressSearch {
                         } else {
                             log.debug("SQL response for planning portal not properly formatted " + returnAddress.toString());
                         }
-                        System.out.println("ADDED " + propertyListing.getPlanningPortalPropId());
-
                         propertyListingArrayList.add(propertyListing);
                     }
 

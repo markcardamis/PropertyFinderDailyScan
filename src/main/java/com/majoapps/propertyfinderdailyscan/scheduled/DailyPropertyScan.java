@@ -146,9 +146,7 @@ public class DailyPropertyScan {
                     if (propertyListings != null && propertyListings.length > 0) { // check if there are results to add
                         propertyListingList.clear();
                         propertyListingList = addPlanningPortalAddress(planningPortalAddressSearch, Arrays.asList(propertyListings));
-                        System.out.println("after portal " + propertyListings.length);
                         propertyListingList = addAdditionalPropertyFields(propertyInformationService, propertyListingList);
-                        System.out.println("additional fields " + propertyListings.length);
                         saveDatabasePoint(propertyListingService, propertyListingList);
                         log.info("{} Pages {} {}", price, i, propertyListings.length);
                     }
