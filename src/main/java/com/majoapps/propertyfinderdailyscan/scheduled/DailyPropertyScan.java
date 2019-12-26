@@ -142,6 +142,7 @@ public class DailyPropertyScan {
                 for (int i = 1; i < 6; i++) { // run through paginated results max 5 pages
                     searchJson.page = i;
                     String domainAuthString = getDomainAuth(domainAuthentication, authTokenString, domainKey, domainSearchCount);
+                    System.out.println("Got domain Auth " + domainAuthString.length());
                     PropertyListingDTO[] propertyListings = getDomainListing(domainListingService, domainAuthString, searchJson);
 
                     if (propertyListings != null && propertyListings.length > 0) { // check if there are results to add
