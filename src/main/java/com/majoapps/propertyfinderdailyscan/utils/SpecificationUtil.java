@@ -30,19 +30,51 @@ public class SpecificationUtil {
                 sb.append(roadString(propertyInformation.getStreetName().toUpperCase()));
                 sb.append('\'');
             }
-            // if (propertyInformation.getSuburbName() != null && 
-            //     propertyInformation.getSuburbName().length() > 0) {
-            //     sb.append(" AND suburbName:");
-            //     sb.append('\'');
-            //     sb.append(propertyInformation.getSuburbName().toUpperCase());
-            //     sb.append('\'');
-            // }
+            if (propertyInformation.getSuburbName() != null && 
+                propertyInformation.getSuburbName().length() > 0) {
+                sb.append(" AND suburbName:");
+                sb.append('\'');
+                sb.append(propertyInformation.getSuburbName().toUpperCase());
+                sb.append('\'');
+            }
             if (propertyInformation.getPostCode() != null && 
                 propertyInformation.getPostCode().length() > 0) {
                 sb.append(" AND postCode:");
                 sb.append('\'');
                 sb.append(propertyInformation.getPostCode().toUpperCase());
                 sb.append('\'');
+            }
+        }
+        return sb.toString();
+    }
+
+    public static String createAddressString (PropertyListingDTO propertyInformation) {
+        StringBuilder sb = new StringBuilder("");
+        if (propertyInformation != null) {
+            if (propertyInformation.getUnitNumber() != null && 
+                propertyInformation.getUnitNumber().length() > 0) {
+                sb.append(propertyInformation.getUnitNumber().toUpperCase());
+                sb.append(" ");
+            }
+            if (propertyInformation.getHouseNumber() != null && 
+                propertyInformation.getHouseNumber().length() > 0) {
+                sb.append(propertyInformation.getHouseNumber().toUpperCase());
+                sb.append(" ");
+            }
+            if (propertyInformation.getStreetName() != null && 
+                propertyInformation.getStreetName().length() > 0) {
+                sb.append(roadString(propertyInformation.getStreetName().toUpperCase()));
+                sb.append(" ");
+            }
+            if (propertyInformation.getSuburbName() != null && 
+                propertyInformation.getSuburbName().length() > 0) {
+                sb.append(propertyInformation.getSuburbName().toUpperCase());
+                sb.append(" ");
+            }
+            if (propertyInformation.getPostCode() != null && 
+                propertyInformation.getPostCode().length() > 0) {
+                sb.append(propertyInformation.getPostCode().toUpperCase());
+                sb.append(" ");
             }
         }
         return sb.toString();

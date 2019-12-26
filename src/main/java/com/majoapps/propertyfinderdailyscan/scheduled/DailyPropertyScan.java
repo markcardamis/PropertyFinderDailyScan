@@ -6,7 +6,7 @@ import com.majoapps.propertyfinderdailyscan.business.domain.PropertySearchReques
 import com.majoapps.propertyfinderdailyscan.business.domain.SearchLocations;
 import com.majoapps.propertyfinderdailyscan.business.service.IDomainAuthentication;
 import com.majoapps.propertyfinderdailyscan.business.service.IDomainListingService;
-import com.majoapps.propertyfinderdailyscan.business.service.IPlanningPortalAddressSearch;
+import com.majoapps.propertyfinderdailyscan.business.service.PlanningPortalAddressSearch;
 import com.majoapps.propertyfinderdailyscan.business.service.PropertyInformationService;
 import com.majoapps.propertyfinderdailyscan.business.service.PropertyListingService;
 import com.majoapps.propertyfinderdailyscan.data.entity.PropertyInformation;
@@ -39,14 +39,14 @@ public class DailyPropertyScan {
     private final PropertyInformationService propertyInformationService;
     private final IDomainListingService domainListingService;
     private final IDomainAuthentication domainAuthentication;
-    private final IPlanningPortalAddressSearch planningPortalAddressSearch;
+    private final PlanningPortalAddressSearch planningPortalAddressSearch;
 
     @Autowired
     public DailyPropertyScan(PropertyListingService propertyListingService, 
             PropertyInformationService propertyInformationService,
             IDomainListingService domainListingService, 
             IDomainAuthentication domainAuthentication, 
-            IPlanningPortalAddressSearch planningPortalAddressSearch) {
+            PlanningPortalAddressSearch planningPortalAddressSearch) {
         this.propertyListingService = propertyListingService;
         this.propertyInformationService = propertyInformationService;
         this.domainListingService = domainListingService;
@@ -252,8 +252,8 @@ public class DailyPropertyScan {
         return(domainListingService.getPropertyList(authToken, searchJsonCommercial));
     }
 
-    private List<PropertyListingDTO> addPlanningPortalAddress(IPlanningPortalAddressSearch planningPortalAddressSearch, List<PropertyListingDTO> propertyListings) throws Exception {
-        return(planningPortalAddressSearch.getFormattedAddressMultiThreaded(propertyListings));
+    private List<PropertyListingDTO> addPlanningPortalAddress(PlanningPortalAddressSearch planningPortalAddressSearch, List<PropertyListingDTO> propertyListings) throws Exception {
+        return(planningPortalAddressSearch.addPlanningPortalId(propertyListings));
     }
 
     private List<PropertyListingDTO> addAdditionalPropertyFields(PropertyInformationService propertyInformationService, List<PropertyListingDTO> propertyListings) throws Exception {
