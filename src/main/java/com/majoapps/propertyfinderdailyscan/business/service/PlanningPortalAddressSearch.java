@@ -49,13 +49,13 @@ public class PlanningPortalAddressSearch {
                     List<String> returnAddressList = propertyInformationRepository.findByAddress(
                         SpecificationUtil.createAddressString(propertyListing));
                     
-                    if (returnAddressList.size() == 0) {
-                        propertyListing.setSuburbName("");
-                        returnAddressList = propertyInformationRepository.findByAddress(
-                            SpecificationUtil.createAddressString(propertyListing));
-                    }
+                    // if (returnAddressList.size() == 0) {
+                    //     propertyListing.setSuburbName("");
+                    //     returnAddressList = propertyInformationRepository.findByAddress(
+                    //         SpecificationUtil.createAddressString(propertyListing));
+                    // }
 
-                    System.out.println("address found " + returnAddressList.size());
+                    System.out.println("Found Address database " + returnAddressList.size());
 
                     for (String returnAddress : returnAddressList) {
                         String returnAddreses[] = returnAddress.split("\\,");
