@@ -40,7 +40,11 @@ public class PlanningPortalAddressSearch {
 
 
                     
-                    System.out.println("Check Address " + propertyListing.getAddress());
+                    System.out.println("Check Address UnFormat " + propertyListing.getAddress());
+
+
+                    String addressFormat = SpecificationUtil.createAddressString(propertyListing);
+                    System.out.println("Check Address Formated " + addressFormat);
 
                     List<String> returnAddressList = propertyInformationRepository.findByAddress(
                         SpecificationUtil.createAddressString(propertyListing));
@@ -49,12 +53,9 @@ public class PlanningPortalAddressSearch {
                         propertyListing.setSuburbName("");
                         returnAddressList = propertyInformationRepository.findByAddress(
                             SpecificationUtil.createAddressString(propertyListing));
-                        System.out.println("2nd address " + returnAddressList.size());
-                    } else {
-                        System.out.println("1st address " + returnAddressList.size());
                     }
 
-                    System.out.println("address returned complete ");
+                    System.out.println("address found " + returnAddressList.size());
 
                     for (String returnAddress : returnAddressList) {
                         String returnAddreses[] = returnAddress.split("\\,");
@@ -64,7 +65,7 @@ public class PlanningPortalAddressSearch {
                         } else {
                             log.debug("SQL response for planning portal not properly formatted " + returnAddress.toString());
                         }
-                        System.out.println("add listing " + propertyListing.getPlanningPortalPropId());
+                        System.out.println("ADDED " + propertyListing.getPlanningPortalPropId());
 
                         propertyListingArrayList.add(propertyListing);
                     }
