@@ -144,7 +144,7 @@ public class DailyPropertyScan {
                     String domainAuthString = getDomainAuth(domainAuthentication, authTokenString, domainKey, domainSearchCount);
                     System.out.println("Got domain Auth " + domainAuthString.length());
                     PropertyListingDTO[] propertyListings = getDomainListing(domainListingService, domainAuthString, searchJson);
-
+                    System.out.println("listings length " + propertyListings.length);
                     if (propertyListings != null && propertyListings.length > 0) { // check if there are results to add
                         propertyListingList.clear();
                         propertyListingList = addPlanningPortalAddress(planningPortalAddressSearch, Arrays.asList(propertyListings));
