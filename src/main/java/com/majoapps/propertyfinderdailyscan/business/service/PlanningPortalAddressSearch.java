@@ -24,6 +24,8 @@ public class PlanningPortalAddressSearch {
 
     public List<PropertyListingDTO> addPlanningPortalId(List<PropertyListingDTO> propertyListings) throws Exception{
 
+        System.out.println("portalId size " + propertyListings.size());
+
         // Get Planning portal zone info
         if (propertyListings != null && propertyListings.size() > 0){
             for (PropertyListingDTO propertyListing : propertyListings) {
@@ -36,13 +38,22 @@ public class PlanningPortalAddressSearch {
                     propertyListing.getPostCode() != null &&
                     propertyListing.getPostCode().length() > 0) {
 
+
+                    
+                    System.out.println("Check Address " + propertyListing.getAddress());
+
                     List<String> returnAddressList = propertyInformationRepository.findByAddress(
                         SpecificationUtil.createAddressString(propertyListing));
+                    
+                    System.out.println("address return " + returnAddressList.size());
+
                     if (returnAddressList.size() == 0) {
                         propertyListing.setSuburbName("");
                         returnAddressList = propertyInformationRepository.findByAddress(
                             SpecificationUtil.createAddressString(propertyListing));
                     }
+                    System.out.println("address return " + returnAddressList.size());
+
                     for (String returnAddress : returnAddressList) {
                         String returnAddreses[] = returnAddress.split("\\,");
                         if (returnAddreses.length == 2) {
@@ -51,6 +62,8 @@ public class PlanningPortalAddressSearch {
                         } else {
                             log.debug("SQL response for planning portal not properly formatted " + returnAddress.toString());
                         }
+                        System.out.println("add listing " + propertyListing.getPlanningPortalPropId());
+
                         propertyListingArrayList.add(propertyListing);
                     }
 
