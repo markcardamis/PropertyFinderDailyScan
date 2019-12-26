@@ -45,14 +45,16 @@ public class PlanningPortalAddressSearch {
                     List<String> returnAddressList = propertyInformationRepository.findByAddress(
                         SpecificationUtil.createAddressString(propertyListing));
                     
-                    System.out.println("address return " + returnAddressList.size());
-
                     if (returnAddressList.size() == 0) {
                         propertyListing.setSuburbName("");
                         returnAddressList = propertyInformationRepository.findByAddress(
                             SpecificationUtil.createAddressString(propertyListing));
+                        System.out.println("2nd address " + returnAddressList.size());
+                    } else {
+                        System.out.println("1st address " + returnAddressList.size());
                     }
-                    System.out.println("address return " + returnAddressList.size());
+
+                    System.out.println("address returned complete ");
 
                     for (String returnAddress : returnAddressList) {
                         String returnAddreses[] = returnAddress.split("\\,");
