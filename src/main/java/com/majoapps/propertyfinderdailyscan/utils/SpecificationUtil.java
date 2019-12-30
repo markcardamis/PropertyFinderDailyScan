@@ -2,8 +2,6 @@ package com.majoapps.propertyfinderdailyscan.utils;
 
 import com.majoapps.propertyfinderdailyscan.business.domain.PropertyListingDTO;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class SpecificationUtil {
 
     public static String createSpecificationString (PropertyListingDTO propertyInformation) {
@@ -74,7 +72,6 @@ public class SpecificationUtil {
             if (propertyInformation.getPostCode() != null && 
                 propertyInformation.getPostCode().length() > 0) {
                 sb.append(propertyInformation.getPostCode().toUpperCase());
-                sb.append(" ");
             }
         }
         return sb.toString();

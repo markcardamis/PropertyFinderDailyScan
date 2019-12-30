@@ -50,7 +50,7 @@ public class PlanningPortalAddressSearch {
 
                         if (returnAddressList.size() == 0) {
                             log.debug("Cannot find address " + addressString);
-                        } else if (returnAddressList.size() == 1){
+                        } else if (returnAddressList.size() == 1) {
                             String returnAddreses[] = returnAddressList.get(0).split("\\,");
                             if (returnAddreses.length == 2) {
                                 propertyListing.setPlanningPortalPropId(returnAddreses[0]);
