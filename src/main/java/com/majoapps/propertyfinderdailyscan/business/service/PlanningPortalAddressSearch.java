@@ -25,7 +25,7 @@ public class PlanningPortalAddressSearch {
         this.propertyInformationRepository = propertyInformationRepository;
     }
 
-    public List<PropertyListingDTO> addPlanningPortalId1(List<PropertyListingDTO> propertyListings) throws Exception{
+    public List<PropertyListingDTO> addPlanningPortalIdSingleThread(List<PropertyListingDTO> propertyListings) throws Exception {
         // Get Planning portal zone info
         if (propertyListings != null && propertyListings.size() > 0){
             for (PropertyListingDTO propertyListing : propertyListings) {
@@ -39,11 +39,11 @@ public class PlanningPortalAddressSearch {
                     propertyListing.getPostCode().length() > 0) {
 
 
-                    String addressString = SpecificationUtil.createAddressString(propertyListing).toLowerCase();
+                    String addressString = SpecificationUtil.createAddressString(propertyListing);
                     if (!addressString.contains("lot")) {
                         log.debug("looking for address " + addressString);
-                        System.out.println("looking for address " + addressString);
-                        List<String> returnAddressList = propertyInformationRepository.findByAddress(addressString);
+                        List<String> returnAddressList = propertyInformationRepository.
+                            findByAddress(addressString);
 
                         if (returnAddressList.size() == 0) {
                             propertyListing.setSuburbName("");
@@ -59,9 +59,9 @@ public class PlanningPortalAddressSearch {
                                 propertyListing.setPlanningPortalPropId(returnAddreses[0]);
                                 propertyListing.setPlanningPortalAddress(returnAddreses[1]);
                                 log.debug("found the address " + returnAddreses[1]);
-                                System.out.println("found the address " + returnAddreses[1]);
                             } else {
-                                log.info("SQL response for planning portal not properly formatted " + returnAddressList.get(0).toString());
+                                log.info("SQL response for planning portal wrongly formatted " + 
+                                    returnAddressList.get(0).toString());
                             }
                         } else {
                             log.debug("Found many address " + addressString);
@@ -95,7 +95,6 @@ public class PlanningPortalAddressSearch {
 
                     Runnable worker = new MyRunnable(propertyInformationRepository, propertyListing);
                     executor.execute(worker);
-                    //Thread.sleep(150L); // run at just below 7 RPS
                     worker = null; // for gc
 
                 }
@@ -107,8 +106,6 @@ public class PlanningPortalAddressSearch {
         while (!executor.isTerminated()) {
             Thread.yield(); 
         }
-
-        System.out.println("Finished all planning portal address threads");
         return propertyListingArrayList;
     }
 
@@ -124,11 +121,11 @@ public class PlanningPortalAddressSearch {
         @Override
         public void run() {
             try {
-                String addressString = SpecificationUtil.createAddressString(propertyListing).toLowerCase();
+                String addressString = SpecificationUtil.createAddressString(propertyListing);
                     if (!addressString.contains("lot")) {
                         log.debug("looking for address " + addressString);
-                        System.out.println("looking for address " + addressString);
-                        List<String> returnAddressList = propertyInformationRepository.findByAddress(addressString);
+                        List<String> returnAddressList = propertyInformationRepository.
+                            findByAddress(addressString);
 
                         if (returnAddressList.size() == 0) {
                             propertyListing.setSuburbName("");
@@ -144,9 +141,9 @@ public class PlanningPortalAddressSearch {
                                 propertyListing.setPlanningPortalPropId(returnAddreses[0]);
                                 propertyListing.setPlanningPortalAddress(returnAddreses[1]);
                                 log.debug("found the address " + returnAddreses[1]);
-                                System.out.println("found the address " + returnAddreses[1]);
                             } else {
-                                log.info("SQL response for planning portal not properly formatted " + returnAddressList.get(0).toString());
+                                log.info("SQL response for planning portal wrongly formatted " + 
+                                    returnAddressList.get(0).toString());
                             }
                         } else {
                             log.debug("Found many address " + addressString);
@@ -158,7 +155,7 @@ public class PlanningPortalAddressSearch {
                         
                     propertyListingArrayList.add(propertyListing);
             } catch (Exception e){
-                System.out.println(" runnable exception " + e.getLocalizedMessage());
+                log.debug(" runnable exception " + e.getLocalizedMessage());
             }
         }
 
