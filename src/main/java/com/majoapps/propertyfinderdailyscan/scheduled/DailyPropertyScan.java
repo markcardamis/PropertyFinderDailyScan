@@ -71,20 +71,18 @@ public class DailyPropertyScan {
     @Async
     public void getListingsNSW() throws Exception {
         log.debug("Business Day Check {}", dateFormat.format(new Date()));
-        if (!dateHelper.isBusinessDay()) {
-            propertyListingService.deleteAll();
-            log.info("Schduled run of getListing {}", dateFormat.format(new Date()));
-            if (System.getenv().get("DOMAIN_KEY") != null) {
-                domainKey = Integer.valueOf(System.getenv().get("DOMAIN_KEY"));
-                log.info("DOMAIN KEY {} ", domainKey);
-            } else {
-                domainKey = 3;
-                log.info("DOMAIN KEY DEFAULT {} ", domainKey);
-            }
-            getListingsResidentialNSW();
-            getListingsCommercialNSW();
-            System.out.println("Complete");
+        propertyListingService.deleteAll();
+        log.info("Schduled run of getListing {}", dateFormat.format(new Date()));
+        if (System.getenv().get("DOMAIN_KEY") != null) {
+            domainKey = Integer.valueOf(System.getenv().get("DOMAIN_KEY"));
+            log.info("DOMAIN KEY {} ", domainKey);
+        } else {
+            domainKey = 3;
+            log.info("DOMAIN KEY DEFAULT {} ", domainKey);
         }
+        getListingsResidentialNSW();
+        getListingsCommercialNSW();
+        System.out.println("Complete");
     }
 
     private void getListingsResidentialNSW() throws Exception {
