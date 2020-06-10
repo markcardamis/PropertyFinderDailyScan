@@ -260,7 +260,7 @@ public class DailyPropertyScan {
                     PropertyInformation propertyInformation = propertyInformationService.
                         getPropertyInformation(Integer.parseInt(propertyListingDTO.getPlanningPortalPropId()));
                     propertyListingDTO.setFloorSpaceRatio(propertyInformation.getFloorSpaceRatio()); 
-                    propertyListingDTO.setLandValue(propertyInformation.getLandValue1());
+                    propertyListingDTO.setLandValue(propertyInformation.getLandValue0());
                     propertyListingDTO.setZone(propertyInformation.getZoneCode());
                     
                     // calculated fields for the PropertyListingDTO object
