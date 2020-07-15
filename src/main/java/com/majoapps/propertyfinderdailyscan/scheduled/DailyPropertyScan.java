@@ -19,12 +19,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+@ToString
 @Slf4j
 @Component
 public class DailyPropertyScan {
@@ -96,7 +99,15 @@ public class DailyPropertyScan {
         Integer priceIncrementAmountLarge = 1000000;
         Integer priceStop = 5000000;
         Integer minLandSize = 400;
-        String[] propertyTypes = new String[]{"DevelopmentSite", "House", "NewLand", "VacantLand"};
+        String[] propertyTypes = new String[]{
+            "AcreageSemiRural", 
+            "DevelopmentSite", 
+            "Farm",
+            "House", 
+            "NewLand",
+            "Rural",
+            "VacantLand"
+        };
 
         PropertySearchRequest.Locations sydneyRegion = new PropertySearchRequest.Locations();
         sydneyRegion.state = "NSW";
@@ -166,12 +177,12 @@ public class DailyPropertyScan {
         priceSearch.type = "totalAmount";
         searchJsonCommercial.price = priceSearch;
         searchJsonCommercial.propertyTypes = new String[]{
-                "blockOfUnits",
-                "developmentLand",
-                "developmentSite",
-                "newLand",
-                "propertyRealEstate",
-                "vacantLand"
+            "blockOfUnits",
+            "developmentLand",
+            "developmentSite",
+            "newLand",
+            "propertyRealEstate",
+            "vacantLand"
         };
         searchJsonCommercial.landAreaMin = 100;
         searchJsonCommercial.pageSize = PAGE_SIZE;
