@@ -33,4 +33,5 @@ public class PropertyListingDTO {
     public String planningPortalAddress;
     public Integer pricePSM;
     public BigDecimal priceToLandValue;
+    public String minimumLotSize;
 }

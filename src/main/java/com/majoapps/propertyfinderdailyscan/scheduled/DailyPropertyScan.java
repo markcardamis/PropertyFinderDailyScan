@@ -273,6 +273,7 @@ public class DailyPropertyScan {
                     propertyListingDTO.setFloorSpaceRatio(propertyInformation.getFloorSpaceRatio()); 
                     propertyListingDTO.setLandValue(propertyInformation.getLandValue0());
                     propertyListingDTO.setZone(propertyInformation.getZoneCode());
+                    propertyListingDTO.setMinimumLotSize(propertyInformation.getMinimumLotSize());
                     
                     // calculated fields for the PropertyListingDTO object
                     if (propertyListingDTO.getPriceInt() != null && propertyListingDTO.getPriceInt() != 0 && 
