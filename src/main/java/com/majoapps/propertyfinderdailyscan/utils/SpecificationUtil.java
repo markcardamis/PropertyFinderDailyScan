@@ -78,9 +78,18 @@ public class SpecificationUtil {
     }
 
     private static String roadString (String roadString) {
-        String returnRoadString[] = roadString.split("\\ ");
+        String roadStringTemp = roadString;
+
+        //look for unusual multi-string abbreviations first
+        roadStringTemp = roadStringTemp.replaceFirst("SERVICE WAY", "SWY");
+        roadStringTemp = roadStringTemp.replaceFirst("FIRE TRACK", "FTRK");
+        roadStringTemp = roadStringTemp.replaceFirst("CUL DE SAC", "CDS");
+
+        //split the string into parts uses spaces
+        String[] returnRoadString = roadStringTemp.split("\\s+");
+
         if (returnRoadString.length > 1) {
-            String result = roadString.substring(0,roadString.lastIndexOf(" "));
+            //only check the last word in the array for the abbreviation
             String tempString = returnRoadString[returnRoadString.length - 1];
             tempString = tempString.replaceFirst("ACCESS", "ACCS");
             tempString = tempString.replaceFirst("ALLEY", "ALLY");
@@ -106,7 +115,6 @@ public class SpecificationUtil {
             tempString = tempString.replaceFirst("BYPASS", "BYPA");
             tempString = tempString.replaceFirst("CAUSEWAY", "CAUS");
             tempString = tempString.replaceFirst("CIRCUIT", "CCT");
-            tempString = tempString.replaceFirst("CUL DE SAC", "CDS"); 
             tempString = tempString.replaceFirst("CUL-DE-SAC", "CDS");
             tempString = tempString.replaceFirst("CHASE", "CH");
             tempString = tempString.replaceFirst("CIRCLE", "CIR");
@@ -164,7 +172,6 @@ public class SpecificationUtil {
             tempString = tempString.replaceFirst("FORK", "FORK");
             tempString = tempString.replaceFirst("FRONTAGE", "FRTG");
             tempString = tempString.replaceFirst("FORESHORE", "FSHR");
-            tempString = tempString.replaceFirst("FIRE TRACK", "FTRK"); 
             tempString = tempString.replaceFirst("FREEWAY", "FWY");
             tempString = tempString.replaceFirst("GAP", "GAP");
             tempString = tempString.replaceFirst("GARDEN", "GDN");
@@ -253,7 +260,6 @@ public class SpecificationUtil {
             tempString = tempString.replaceFirst("STEPS", "STPS");
             tempString = tempString.replaceFirst("STRIP", "STRP");
             tempString = tempString.replaceFirst("STRAIGHT", "STRT");
-            tempString = tempString.replaceFirst("SERVICE WAY", "SWY");
             tempString = tempString.replaceFirst("TARN", "TARN");
             tempString = tempString.replaceFirst("TERRACE", "TCE");
             tempString = tempString.replaceFirst("THROUGHWAY", "THRU");
@@ -278,10 +284,9 @@ public class SpecificationUtil {
             tempString = tempString.replaceFirst("WATERS", "WTRS");
             tempString = tempString.replaceFirst("WATERWAY", "WTWY");
             tempString = tempString.replaceFirst("WYND", "WYND");
-            roadString = result + " " + tempString;
-        } 
-        roadString = roadString.replaceAll("  ", " ");
-        return roadString;
+            returnRoadString[returnRoadString.length - 1] = tempString;
+        }
+        return String.join(" ", returnRoadString);
     }
 
 }
