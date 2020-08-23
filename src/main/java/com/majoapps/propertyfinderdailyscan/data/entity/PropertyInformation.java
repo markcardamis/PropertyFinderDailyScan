@@ -102,5 +102,9 @@ public class PropertyInformation {
     private String minimumLotSize;
     @Column(name="building_height")
     private BigDecimal buildingHeight;
+    @Column(name="latitude")
+    private Double latitude;
+    @Column(name="longitude")
+    private Double longitude;
 
 }
