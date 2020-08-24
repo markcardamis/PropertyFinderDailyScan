@@ -1,5 +1,6 @@
 package com.majoapps.propertyfinderdailyscan.data.entity;
 
+import com.majoapps.propertyfinderdailyscan.data.enums.Frequency;
 import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
