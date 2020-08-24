@@ -1,12 +1,9 @@
 package com.majoapps.propertyfinderdailyscan.data.entity;
 
 import com.majoapps.propertyfinderdailyscan.data.enums.Frequency;
+import com.majoapps.propertyfinderdailyscan.utils.FrequencyEnumConverter;
 import java.math.BigDecimal;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,6 +19,7 @@ public class Notifications extends AuditModel {
     private Account account;
     @Column(name="title")
     private String title;
+    @Convert(converter = FrequencyEnumConverter.class)
     @Column(name="frequency")
     private Frequency frequency;
     @Column(name="property_zone")
