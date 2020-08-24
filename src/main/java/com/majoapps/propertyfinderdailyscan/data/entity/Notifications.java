@@ -19,6 +19,10 @@ public class Notifications extends AuditModel {
     @ManyToOne(targetEntity = Account.class)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
+    @Column(name="name")
+    private String name;
+    @Column(name="frequency")
+    private Frequency frequency;
     @Column(name="property_zone")
     private String propertyZone;
     @Column(name="property_area_min")
