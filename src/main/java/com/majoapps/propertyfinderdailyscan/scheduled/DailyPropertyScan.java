@@ -266,10 +266,10 @@ public class DailyPropertyScan {
 
     private List<PropertyListingDTO> addAdditionalPropertyFields(PropertyInformationService propertyInformationService, List<PropertyListingDTO> propertyListings) throws Exception {
         for (PropertyListingDTO propertyListingDTO : propertyListings) {
-            if (propertyListingDTO.getPlanningPortalPropId() != null) {
+            if (propertyListingDTO.getPropertyId() != null) {
                 try {
                     PropertyInformation propertyInformation = propertyInformationService.
-                        getPropertyInformation(Integer.parseInt(propertyListingDTO.getPlanningPortalPropId()));
+                        getPropertyInformation(propertyListingDTO.getPropertyId());
                     propertyListingDTO.setFloorSpaceRatio(propertyInformation.getFloorSpaceRatio()); 
                     propertyListingDTO.setLandValue(propertyInformation.getLandValue0());
                     propertyListingDTO.setZone(propertyInformation.getZoneCode());

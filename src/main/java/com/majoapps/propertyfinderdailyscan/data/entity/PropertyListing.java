@@ -60,8 +60,8 @@ public class PropertyListing {
     @Column(name="summary_description")
     private String summaryDescription;
     @JsonIgnore
-    @Column(name="planning_portal_id")
-    private String planningPortalPropId;
+    @Column(name="property_id")
+    private Integer propertyId;
     @JsonIgnore
     @Column(name="planning_portal_address")
     private String planningPortalAddress;

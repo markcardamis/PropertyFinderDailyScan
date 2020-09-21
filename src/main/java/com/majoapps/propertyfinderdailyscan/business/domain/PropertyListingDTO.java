@@ -29,7 +29,7 @@ public class PropertyListingDTO {
     public Double latitude;
     public Double longitude;
     public String summaryDescription;
-    public String planningPortalPropId;
+    public Integer propertyId;
     public String planningPortalAddress;
     public Integer pricePSM;
     public BigDecimal priceToLandValue;

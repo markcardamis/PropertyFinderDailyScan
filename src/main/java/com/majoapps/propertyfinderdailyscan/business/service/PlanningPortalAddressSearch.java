@@ -56,7 +56,7 @@ public class PlanningPortalAddressSearch {
                         } else if (returnAddressList.size() == 1) {
                             String returnAddreses[] = returnAddressList.get(0).split("\\,");
                             if (returnAddreses.length == 2) {
-                                propertyListing.setPlanningPortalPropId(returnAddreses[0]);
+                                propertyListing.setPropertyId(Integer.parseInt(returnAddreses[0]));
                                 propertyListing.setPlanningPortalAddress(returnAddreses[1]);
                                 log.debug("found the address " + returnAddreses[1]);
                             } else {
@@ -138,7 +138,7 @@ public class PlanningPortalAddressSearch {
                         } else if (returnAddressList.size() == 1) {
                             String returnAddreses[] = returnAddressList.get(0).split("\\,");
                             if (returnAddreses.length == 2) {
-                                propertyListing.setPlanningPortalPropId(returnAddreses[0]);
+                                propertyListing.setPropertyId(Integer.parseInt(returnAddreses[0]));
                                 propertyListing.setPlanningPortalAddress(returnAddreses[1]);
                                 log.debug("found the address " + returnAddreses[1]);
                             } else {

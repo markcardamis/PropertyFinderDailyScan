@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface PropertyListingRepository extends JpaRepository<PropertyListing, Integer>, JpaSpecificationExecutor<PropertyListing> {
     List<PropertyListing> findByDomainListingId(Integer domainListingId);
-    List<PropertyListing> findByPlanningPortalPropId(Integer planningPortalPropId);
+    List<PropertyListing> findByPropertyId(Integer propertyId);
 }

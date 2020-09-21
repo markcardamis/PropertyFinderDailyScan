@@ -98,8 +98,8 @@ public class PropertyListingService {
                 propertyListingEntity.setLongitude(propertyListingNew.getLongitude());
             if(propertyListingNew.getSummaryDescription() != null) 
                 propertyListingEntity.setSummaryDescription(propertyListingNew.getSummaryDescription());
-            if(propertyListingNew.getPlanningPortalPropId() != null) 
-                propertyListingEntity.setPlanningPortalPropId(propertyListingNew.getPlanningPortalPropId());
+            if(propertyListingNew.getPropertyId() != null) 
+                propertyListingEntity.setPropertyId(propertyListingNew.getPropertyId());
             if(propertyListingNew.getPlanningPortalAddress() != null) 
                 propertyListingEntity.setPlanningPortalAddress(propertyListingNew.getPlanningPortalAddress());
             if(propertyListingNew.getZone() != null) 
