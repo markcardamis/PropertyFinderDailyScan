@@ -11,7 +11,6 @@ import com.majoapps.propertyfinderdailyscan.business.service.PropertyInformation
 import com.majoapps.propertyfinderdailyscan.business.service.PropertyListingService;
 import com.majoapps.propertyfinderdailyscan.data.entity.PropertyInformation;
 import com.majoapps.propertyfinderdailyscan.data.entity.PropertyListing;
-import com.majoapps.propertyfinderdailyscan.utils.DateHelper;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -34,7 +32,6 @@ public class DailyPropertyScan {
     private final static int PAGE_SIZE = 200;
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-    private static final DateHelper dateHelper = new DateHelper();
     private static final ModelMapper modelMapper = new ModelMapper();
     private List<PropertyListingDTO> propertyListingList = new ArrayList<>();
 
@@ -57,7 +54,7 @@ public class DailyPropertyScan {
         this.planningPortalAddressSearch = planningPortalAddressSearch;
     }
 
-    private String[] authKey = {
+    private final String[] authKey = {
         System.getenv().get("DOMAIN_KEY_0"),
         System.getenv().get("DOMAIN_KEY_1"),
         System.getenv().get("DOMAIN_KEY_2"),
@@ -96,9 +93,9 @@ public class DailyPropertyScan {
         Integer priceIncrementAmountSmallSydney = 100000;
         Integer priceIncrementAmountSmallRegional = 20000;
         Integer priceIncrementAmountMedium = 200000;
-        Integer priceIncrementAmountLarge = 1000000;
-        Integer priceStop = 5000000;
-        Integer minLandSize = 400;
+        Integer priceIncrementAmountLarge = 2000000;
+        Integer priceStop = 20000000;
+        Integer minLandSize = 100;
         String[] propertyTypes = new String[]{
             "AcreageSemiRural", 
             "DevelopmentSite", 
@@ -173,7 +170,7 @@ public class DailyPropertyScan {
         searchJsonCommercial.searchMode = "forSale";
         PropertySearchCommercialRequest.PriceSearch priceSearch = new PropertySearchCommercialRequest.PriceSearch();
         priceSearch.min = 100000;
-        priceSearch.max = 5000000;
+        priceSearch.max = 20000000;
         priceSearch.type = "totalAmount";
         searchJsonCommercial.price = priceSearch;
         searchJsonCommercial.propertyTypes = new String[]{
@@ -302,6 +299,7 @@ public class DailyPropertyScan {
             if (propertyListing != null && propertyListing.getDomainListingId() != 0) {
                 propertyListingService.savePropertyListing(propertyListing);
             } else {
+                assert propertyListing != null;
                 log.debug("Cannot save NULL LISTING {}", propertyListing.toString());
             }
         }
