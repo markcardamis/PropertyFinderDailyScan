@@ -114,6 +114,8 @@ public class PropertyListingService {
                 propertyListingEntity.setPricePSM(propertyListingNew.getPricePSM());
             if(propertyListingNew.getPriceToLandValue() != null) 
                 propertyListingEntity.setPriceToLandValue(propertyListingNew.getPriceToLandValue());
+            if(propertyListingNew.getPropertyType() != null)
+                propertyListingEntity.setPropertyType(propertyListingNew.getPropertyType());
 
             return (propertyListingRepository.save(propertyListingNew));        
         }

@@ -34,4 +34,5 @@ public class PropertyListingDTO {
     public Integer pricePSM;
     public BigDecimal priceToLandValue;
     public String minimumLotSize;
+    public String propertyType;
 }

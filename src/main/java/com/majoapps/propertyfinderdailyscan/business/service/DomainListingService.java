@@ -80,6 +80,7 @@ public class DomainListingService implements IDomainListingService
                         propertyListings[i].bathrooms = propertyListingResponse[i].listing.propertyDetails.bathrooms;
                         propertyListings[i].bedrooms = propertyListingResponse[i].listing.propertyDetails.bedrooms;
                         propertyListings[i].carspaces = propertyListingResponse[i].listing.propertyDetails.carspaces;
+                        propertyListings[i].propertyType = StringCheck.isNotNullOrEmpty(propertyListingResponse[i].listing.propertyDetails.propertyType, "");
                     } else {
                         propertyListings[i].domainListingId = 0;
                     } 
@@ -136,6 +137,7 @@ public class DomainListingService implements IDomainListingService
                     propertyListings[i].bathrooms = 0.0;
                     propertyListings[i].bedrooms = 0.0;
                     propertyListings[i].carspaces = propertyListingResponse[i].carspaceCount;
+                    propertyListings[i].propertyType = StringCheck.isNotNullOrEmpty(propertyListingResponse[i].propertyType, "");
                 } catch (Exception e) {
                     log.error("DomainListingCommercialDTO : {} ", e.getLocalizedMessage());
                     propertyListings[i].domainListingId = 0;

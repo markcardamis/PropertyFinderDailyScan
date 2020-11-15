@@ -27,7 +27,7 @@ public class PropertyListing {
     @Column(name="price")
     private String price;
     @JsonIgnore
-    @Column(name="priceInt")
+    @Column(name="price_int")
     private Integer priceInt;
     @Column(name="listing_url")
     private String listingURL;
@@ -77,4 +77,6 @@ public class PropertyListing {
     private Integer pricePSM;
     @Column(name="price_to_land_value")
     private BigDecimal priceToLandValue;
+    @Column(name="property_type")
+    private String propertyType;
 }
