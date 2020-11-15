@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.1.9.RELEASE'
+		springBootVersion = '2.3.4.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -16,7 +16,8 @@ apply plugin: 'io.spring.dependency-management'
 
 group = 'com.majoapps'
 version = '1.0'
-sourceCompatibility = '1.8'
+sourceCompatibility = '15'
+targetCompatibility = '15'
 
 configurations {
 	developmentOnly
@@ -38,7 +39,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'com.okta.spring:okta-spring-boot-starter:1.2.1'
+	implementation 'com.okta.spring:okta-spring-boot-starter:1.4.0'
 	implementation 'com.google.code.gson:gson:2.8.5'
 	implementation 'org.apache.commons:commons-lang3:3.8'
 	implementation 'org.jsoup:jsoup:1.12.1'
