@@ -55,4 +55,6 @@ public class Notifications extends AuditModel {
     private BigDecimal propertyFloorSpaceRatioMin;
     @Column(name="property_floor_space_ratio_max")
     private BigDecimal propertyFloorSpaceRatioMax;
+    @Column(name="land_only")
+    private Boolean landOnly;
 }
