@@ -174,11 +174,14 @@ public class DailyPropertyScan {
         priceSearch.type = "totalAmount";
         searchJsonCommercial.price = priceSearch;
         searchJsonCommercial.propertyTypes = new String[]{
+            "acreageSemiRural",
             "blockOfUnits",
             "developmentLand",
             "developmentSite",
+            "house",
             "newLand",
             "propertyRealEstate",
+            "rural",
             "vacantLand"
         };
         searchJsonCommercial.landAreaMin = 100;
