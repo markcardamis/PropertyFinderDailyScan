@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ServiceHelper implements IServiceHelper
 {
-    private static final int HTTP_REQUEST_TIMEOUT = 60000;
+    private static final int HTTP_REQUEST_TIMEOUT = 180000;
 
     @Override
     public String callHTTPService(String url, HttpMethod method, String json, Boolean basic, String authorization) throws Exception {
