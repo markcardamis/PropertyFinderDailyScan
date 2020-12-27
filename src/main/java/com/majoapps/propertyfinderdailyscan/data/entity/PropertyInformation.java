@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 @Table(name="property_information")
 public class PropertyInformation {
-    
+
     @Column(name = "district_code")
     private short districtCode;
     @Column(name="district_name")
@@ -42,15 +42,6 @@ public class PropertyInformation {
     private BigDecimal area;
     @Column(name="area_type")
     private String areaType;
-    @Temporal(TemporalType.DATE)
-    @Column(name="base_date_0")
-    private Date baseDate0;
-    @Column(name="land_value_0")
-    private Integer landValue0;
-    @Column(name="authority_0")
-    private String authority0;
-    @Column(name="basis_0")
-    private String basis0;
     @Temporal(TemporalType.DATE)
     @Column(name="base_date_1")
     private Date baseDate1;
@@ -106,5 +97,8 @@ public class PropertyInformation {
     private Double latitude;
     @Column(name="longitude")
     private Double longitude;
-
+    @Column(name="street_frontage")
+    private Double streetFrontage;
+    @Column(name="legislation_url")
+    private String legislationURL;
 }
