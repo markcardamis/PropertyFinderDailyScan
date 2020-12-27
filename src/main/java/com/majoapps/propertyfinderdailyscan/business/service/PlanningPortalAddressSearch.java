@@ -40,7 +40,7 @@ public class PlanningPortalAddressSearch {
 
 
                     String addressString = SpecificationUtil.createAddressString(propertyListing);
-                    if (!addressString.contains("lot")) {
+                    if (!addressString.contains("LOT")) {
                         log.debug("looking for address " + addressString);
                         List<String> returnAddressList = propertyInformationRepository.
                             findByAddress(addressString);
@@ -80,7 +80,7 @@ public class PlanningPortalAddressSearch {
     }
 
     public List<PropertyListingDTO> addPlanningPortalId(List<PropertyListingDTO> propertyListings) throws Exception {
-        executor = Executors.newFixedThreadPool(10);
+        executor = Executors.newFixedThreadPool(3);
         // Get Planning portal zone info
         if (propertyListings != null && propertyListings.size() > 0){
             for (PropertyListingDTO propertyListing : propertyListings) {
@@ -122,7 +122,7 @@ public class PlanningPortalAddressSearch {
         public void run() {
             try {
                 String addressString = SpecificationUtil.createAddressString(propertyListing);
-                    if (!addressString.contains("lot")) {
+                    if (!addressString.contains("LOT")) {
                         log.debug("looking for address " + addressString);
                         List<String> returnAddressList = propertyInformationRepository.
                             findByAddress(addressString);
