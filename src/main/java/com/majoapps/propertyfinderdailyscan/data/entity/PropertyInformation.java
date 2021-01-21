@@ -98,7 +98,7 @@ public class PropertyInformation {
     @Column(name="longitude")
     private Double longitude;
     @Column(name="street_frontage")
-    private Double streetFrontage;
+    private BigDecimal streetFrontage;
     @Column(name="legislation_url")
     private String legislationURL;
 }
