@@ -116,7 +116,8 @@ public class PropertyListingService {
                 propertyListingEntity.setPriceToLandValue(propertyListingNew.getPriceToLandValue());
             if(propertyListingNew.getPropertyType() != null)
                 propertyListingEntity.setPropertyType(propertyListingNew.getPropertyType());
-
+            if(propertyListingNew.getStreetFrontage() != null)
+                propertyListingEntity.setStreetFrontage(propertyListingNew.getStreetFrontage());
             return (propertyListingRepository.save(propertyListingNew));        
         }
     }

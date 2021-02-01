@@ -79,4 +79,6 @@ public class PropertyListing {
     private BigDecimal priceToLandValue;
     @Column(name="property_type")
     private String propertyType;
+    @Column(name="street_frontage")
+    private BigDecimal streetFrontage;
 }

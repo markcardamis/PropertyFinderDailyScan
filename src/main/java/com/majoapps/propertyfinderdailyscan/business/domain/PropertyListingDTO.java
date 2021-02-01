@@ -35,4 +35,5 @@ public class PropertyListingDTO {
     public BigDecimal priceToLandValue;
     public String minimumLotSize;
     public String propertyType;
+    public BigDecimal streetFrontage;
 }
