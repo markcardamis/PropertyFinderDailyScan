@@ -9,6 +9,8 @@ import com.majoapps.propertyfinderdailyscan.business.service.IDomainListingServi
 import com.majoapps.propertyfinderdailyscan.business.service.PlanningPortalAddressSearch;
 import com.majoapps.propertyfinderdailyscan.business.service.PropertyInformationService;
 import com.majoapps.propertyfinderdailyscan.business.service.PropertyListingService;
+import com.majoapps.propertyfinderdailyscan.business.service.NotificationsService;
+import com.majoapps.propertyfinderdailyscan.data.entity.Notifications;
 import com.majoapps.propertyfinderdailyscan.data.entity.PropertyInformation;
 import com.majoapps.propertyfinderdailyscan.data.entity.PropertyListing;
 import java.math.BigDecimal;
@@ -37,6 +39,7 @@ public class DailyPropertyScan {
 
     private final PropertyListingService propertyListingService;
     private final PropertyInformationService propertyInformationService;
+    private final NotificationsService notificationsService;
     private final IDomainListingService domainListingService;
     private final IDomainAuthentication domainAuthentication;
     private final PlanningPortalAddressSearch planningPortalAddressSearch;
@@ -44,11 +47,13 @@ public class DailyPropertyScan {
     @Autowired
     public DailyPropertyScan(PropertyListingService propertyListingService, 
             PropertyInformationService propertyInformationService,
-            IDomainListingService domainListingService, 
+            NotificationsService notificationsService,
+            IDomainListingService domainListingService,
             IDomainAuthentication domainAuthentication, 
             PlanningPortalAddressSearch planningPortalAddressSearch) {
         this.propertyListingService = propertyListingService;
         this.propertyInformationService = propertyInformationService;
+        this.notificationsService = notificationsService;
         this.domainListingService = domainListingService;
         this.domainAuthentication = domainAuthentication;
         this.planningPortalAddressSearch = planningPortalAddressSearch;
@@ -82,6 +87,7 @@ public class DailyPropertyScan {
         }
         getListingsResidentialNSW();
         getListingsCommercialNSW();
+        List<Notifications> results = notificationsService.getOutstandingNotifications();
         System.out.println("Complete");
     }
 

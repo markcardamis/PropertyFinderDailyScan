@@ -1,8 +1,14 @@
 package com.majoapps.propertyfinderdailyscan.business.service;
 
+import com.majoapps.propertyfinderdailyscan.business.domain.PropertyListingDTO;
 import com.majoapps.propertyfinderdailyscan.data.entity.PropertyListing;
 import com.majoapps.propertyfinderdailyscan.data.repository.PropertyListingRepository;
+import com.majoapps.propertyfinderdailyscan.exception.ResourceNotFoundException;
+import com.majoapps.propertyfinderdailyscan.utils.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
@@ -14,10 +20,27 @@ import javax.persistence.EntityNotFoundException;
 public class PropertyListingService {
 
     private final PropertyListingRepository propertyListingRepository;
+    private final NotificationsService notificationsService;
 
     @Autowired
-    public PropertyListingService(PropertyListingRepository propertyListingRepository) {
+    public PropertyListingService(PropertyListingRepository propertyListingRepository,
+                                  NotificationsService notificationsService) {
         this.propertyListingRepository = propertyListingRepository;
+        this.notificationsService = notificationsService;
+    }
+
+    // return different amount of listings based on account priority
+    public List<PropertyListingDTO> getPropertyListingBySearch(
+            Specification<PropertyListing> searchSpec) {
+        try {
+            Pageable pageable = PageRequest.of(0, 20); // set page length
+            List<PropertyListing> propertyListing = this.propertyListingRepository
+                    .findAll(Specification.where(searchSpec), pageable).getContent();
+            return ObjectMapperUtils.mapAll(propertyListing, PropertyListingDTO.class);
+        } catch (Exception e) {
+            log.error("Exception: ", e);
+            throw new ResourceNotFoundException("Error retrieving results");
+        }
     }
 
     public List<PropertyListing> getAllListings() {
