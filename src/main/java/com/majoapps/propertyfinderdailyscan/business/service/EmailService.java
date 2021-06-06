@@ -36,12 +36,12 @@
 
                  Email from = new Email("noreply@majoapps.com");
                  String subject = "Re: Domain Trigger " + propertyListing.address;
-                 Email to = new Email(StringCheck.isNotNullOrEmpty(email) ? email:"markncardamis@gmail.com");
+                 Email to = new Email(StringCheck.isNotNullOrEmpty(email) ? email : System.getenv().get("DEFAULT_EMAIL"));
                  Content content = new Content("text/plain", json);
                  Mail mail = new Mail(from, subject, to, content);
 
                  SendGrid sg = new SendGrid(System.getenv().get("SENDGRID_API"));
-                 if (StringCheck.isNotNullOrEmpty(propertyListing.propertyId.toString())) {
+                 if (propertyListing.propertyId != null && propertyListing.propertyId > 0) {
                      sg.addRequestHeader("In-Reply-To", propertyListing.propertyId.toString());
                  }
                  Request request = new Request();
