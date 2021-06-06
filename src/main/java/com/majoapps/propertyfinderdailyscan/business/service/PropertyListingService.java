@@ -1,10 +1,13 @@
 package com.majoapps.propertyfinderdailyscan.business.service;
 
 import com.majoapps.propertyfinderdailyscan.business.domain.PropertyListingDTO;
+import com.majoapps.propertyfinderdailyscan.data.entity.Notifications;
 import com.majoapps.propertyfinderdailyscan.data.entity.PropertyListing;
 import com.majoapps.propertyfinderdailyscan.data.repository.PropertyListingRepository;
 import com.majoapps.propertyfinderdailyscan.exception.ResourceNotFoundException;
 import com.majoapps.propertyfinderdailyscan.utils.ObjectMapperUtils;
+import com.majoapps.propertyfinderdailyscan.utils.SpecificationUtil;
+import com.sipios.springsearch.SpecificationsBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +16,8 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import javax.persistence.EntityNotFoundException;
 
 @Slf4j
@@ -41,6 +46,15 @@ public class PropertyListingService {
             log.error("Exception: ", e);
             throw new ResourceNotFoundException("Error retrieving results");
         }
+    }
+
+    public List<PropertyListingDTO> getPropertyListingsByNotificationsId(UUID id){
+        Objects.requireNonNull(id);
+        Notifications notifications = this.notificationsService.getNotificationsById(id);
+        String token = SpecificationUtil.createSpecificationString(notifications);
+        Specification<PropertyListing> specification = new SpecificationsBuilder<PropertyListing>()
+                .withSearch(token).build();
+        return (this.getPropertyListingBySearch(specification));
     }
 
     public List<PropertyListing> getAllListings() {

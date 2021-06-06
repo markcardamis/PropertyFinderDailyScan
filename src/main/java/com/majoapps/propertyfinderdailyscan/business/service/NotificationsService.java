@@ -4,10 +4,9 @@ import com.majoapps.propertyfinderdailyscan.data.entity.Notifications;
 import com.majoapps.propertyfinderdailyscan.data.repository.NotificationsRepository;
 import com.majoapps.propertyfinderdailyscan.exception.ResourceNotFoundException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.time.Instant;
+import java.util.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,11 @@ public class NotificationsService {
         try {
             List<Notifications> notifications = new ArrayList<>();
             Iterable<Notifications> results = this.notificationsRepository.findAllToBeTriggered();
-            results.forEach(notifications::add);
+            for (Notifications result : results) {
+                notifications.add(result);
+                result.setLastTriggeredAt(Date.from(Instant.now()));    // update last_triggered in notification
+                this.notificationsRepository.save(result);              // save updated last_triggered time
+            }
             return notifications;
         } catch (Exception e) {
             log.error("Exception: ", e);
