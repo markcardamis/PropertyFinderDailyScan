@@ -4,12 +4,7 @@ import com.majoapps.propertyfinderdailyscan.business.domain.PropertyListingDTO;
 import com.majoapps.propertyfinderdailyscan.business.domain.PropertySearchCommercialRequest;
 import com.majoapps.propertyfinderdailyscan.business.domain.PropertySearchRequest;
 import com.majoapps.propertyfinderdailyscan.business.domain.SearchLocations;
-import com.majoapps.propertyfinderdailyscan.business.service.IDomainAuthentication;
-import com.majoapps.propertyfinderdailyscan.business.service.IDomainListingService;
-import com.majoapps.propertyfinderdailyscan.business.service.PlanningPortalAddressSearch;
-import com.majoapps.propertyfinderdailyscan.business.service.PropertyInformationService;
-import com.majoapps.propertyfinderdailyscan.business.service.PropertyListingService;
-import com.majoapps.propertyfinderdailyscan.business.service.NotificationsService;
+import com.majoapps.propertyfinderdailyscan.business.service.*;
 import com.majoapps.propertyfinderdailyscan.data.entity.Notifications;
 import com.majoapps.propertyfinderdailyscan.data.entity.PropertyInformation;
 import com.majoapps.propertyfinderdailyscan.data.entity.PropertyListing;
@@ -43,6 +38,7 @@ public class DailyPropertyScan {
     private final IDomainListingService domainListingService;
     private final IDomainAuthentication domainAuthentication;
     private final PlanningPortalAddressSearch planningPortalAddressSearch;
+    private final IEmailService emailService;
 
     @Autowired
     public DailyPropertyScan(PropertyListingService propertyListingService, 
@@ -50,13 +46,15 @@ public class DailyPropertyScan {
             NotificationsService notificationsService,
             IDomainListingService domainListingService,
             IDomainAuthentication domainAuthentication, 
-            PlanningPortalAddressSearch planningPortalAddressSearch) {
+            PlanningPortalAddressSearch planningPortalAddressSearch,
+            IEmailService emailService) {
         this.propertyListingService = propertyListingService;
         this.propertyInformationService = propertyInformationService;
         this.notificationsService = notificationsService;
         this.domainListingService = domainListingService;
         this.domainAuthentication = domainAuthentication;
         this.planningPortalAddressSearch = planningPortalAddressSearch;
+        this.emailService = emailService;
     }
 
     private final String[] authKey = {
@@ -87,7 +85,25 @@ public class DailyPropertyScan {
         }
         getListingsResidentialNSW();
         getListingsCommercialNSW();
+
+        // Get Notifications that are outstanding
         List<Notifications> results = notificationsService.getOutstandingNotifications();
+        for (Notifications result : results) {
+            Notifications notification = notificationsService.getNotificationsById(result.getId());
+            List<PropertyListingDTO> i = propertyListingService.getPropertyListingsByNotificationsId(notification.getId());
+
+            // Get User Email
+            String email = null;
+            if (result.getAccount().getId().toString().equals(System.getenv().get("DEFAULT_ACCOUNT"))) {
+                email = System.getenv().get("DEFAULT_EMAIL");
+            }
+
+            // Email Notifications TODO Add generic email
+            if (email != null && email.equals(System.getenv().get("DEFAULT_EMAIL"))) {
+                this.emailService.sendEmailNotification(i, email);
+            }
+
+        }
         System.out.println("Complete");
     }
 
@@ -314,10 +330,5 @@ public class DailyPropertyScan {
             }
         }
     }
-
-        // private PropertyListing[] filterProperties(PropertyListing[] pListings) {
-    //     FilterProperties filterProperties = new FilterProperties();
-    //     return (filterProperties.filterProperties(pListings));
-    // }
    
 }
