@@ -74,7 +74,6 @@ public class DailyPropertyScan {
     @Async
     public void getListingsNSW() throws Exception {
         log.debug("Business Day Check {}", dateFormat.format(new Date()));
-        propertyListingService.deleteAll();
         log.info("Schduled run of getListing {}", dateFormat.format(new Date()));
         if (System.getenv().get("DOMAIN_KEY") != null) {
             domainKey = Integer.valueOf(System.getenv().get("DOMAIN_KEY"));
@@ -82,6 +81,12 @@ public class DailyPropertyScan {
         } else {
             domainKey = 3;
             log.info("DOMAIN KEY DEFAULT {} ", domainKey);
+        }
+        try {
+            String domainAuthString = getDomainAuth(domainAuthentication, authTokenString, domainKey, domainSearchCount);
+            propertyListingService.deleteAll();
+        } catch (Exception e){
+            log.error("domainAuthString error, keep old listing data {}", e.getLocalizedMessage());
         }
         getListingsResidentialNSW();
         getListingsCommercialNSW();
