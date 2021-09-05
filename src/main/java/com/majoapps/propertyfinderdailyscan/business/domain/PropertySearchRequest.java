@@ -3,6 +3,7 @@ package com.majoapps.propertyfinderdailyscan.business.domain;
 public class PropertySearchRequest {
     public String listingType;
     public String[] propertyTypes;
+    public String[] listingAttributes;
     public Integer minLandArea;
     public Integer maxLandArea;
     public Integer minPrice;

@@ -133,6 +133,10 @@ public class DailyPropertyScan {
             "VacantLand"
         };
 
+        String[] listingAttributes = new String[]{
+            "NotUnderContract"
+        };
+
         PropertySearchRequest.Locations sydneyRegion = new PropertySearchRequest.Locations();
         sydneyRegion.state = "NSW";
         sydneyRegion.region = "Sydney Region";
@@ -169,6 +173,7 @@ public class DailyPropertyScan {
                 propertySearchRequest.maxPrice = price + priceIncrementAmount;
                 propertySearchRequest.minLandArea = minLandSize;
                 propertySearchRequest.propertyTypes = propertyTypes;
+                propertySearchRequest.listingAttributes = listingAttributes;
                 propertySearchRequest.locations = new PropertySearchRequest.Locations[]{location};
                 PropertySearchRequest searchJson = new SearchLocations().NSW(propertySearchRequest);
                 
