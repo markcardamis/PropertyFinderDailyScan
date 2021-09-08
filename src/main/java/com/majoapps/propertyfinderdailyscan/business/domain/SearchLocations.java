@@ -10,6 +10,7 @@ public class SearchLocations {
         PropertySearchRequest searchJson = new PropertySearchRequest();
         searchJson.listingType =  Optional.ofNullable(propertySearchRequest.listingType).orElse("Sale");
         searchJson.propertyTypes = Optional.ofNullable(propertySearchRequest.propertyTypes).orElse(new String[]{"DevelopmentSite","VacantLand"});
+        searchJson.listingAttributes = Optional.ofNullable(propertySearchRequest.listingAttributes).orElse(new String[]{"NotUnderContract"});
         searchJson.minLandArea = Optional.ofNullable(propertySearchRequest.minLandArea).orElse(720);
         searchJson.minPrice = Optional.ofNullable(propertySearchRequest.minPrice).orElse(200000);
         searchJson.maxPrice = Optional.ofNullable(propertySearchRequest.maxPrice).orElse(250000);
