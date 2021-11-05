@@ -33,6 +33,16 @@ public class Notifications extends AuditModel {
     private Integer propertyId;
     @Column(name="property_zone")
     private String propertyZone;
+    @Column(name="property_zone_1")
+    private String propertyZone1;
+    @Column(name="property_zone_2")
+    private String propertyZone2;
+    @Column(name="property_zone_3")
+    private String propertyZone3;
+    @Column(name="property_zone_4")
+    private String propertyZone4;
+    @Column(name="property_zone_5")
+    private String propertyZone5;
     @Column(name="property_area_min")
     private Integer propertyAreaMin;
     @Column(name="property_area_max")

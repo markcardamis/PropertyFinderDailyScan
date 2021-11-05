@@ -1,5 +1,7 @@
 package com.majoapps.propertyfinderdailyscan.utils;
 
+import static com.majoapps.propertyfinderdailyscan.utils.StringCheck.isNotNullOrEmpty;
+
 import com.majoapps.propertyfinderdailyscan.business.domain.PropertyListingDTO;
 import com.majoapps.propertyfinderdailyscan.data.entity.Notifications;
 
@@ -12,9 +14,37 @@ public class SpecificationUtil {
                 sb.append(" AND propertyId:");
                 sb.append(notifications.getPropertyId());
             }
-            if (notifications.getPropertyZone() != null) {
+            if (isNotNullOrEmpty(notifications.getPropertyZone())) {
                 sb.append(" AND zone:");
                 sb.append(notifications.getPropertyZone());
+            }
+            if (isNotNullOrEmpty(notifications.getPropertyZone1()) ||
+                    isNotNullOrEmpty(notifications.getPropertyZone2()) ||
+                    isNotNullOrEmpty(notifications.getPropertyZone3()) ||
+                    isNotNullOrEmpty(notifications.getPropertyZone4()) ||
+                    isNotNullOrEmpty(notifications.getPropertyZone5())) {
+                sb.append(" AND (id<1"); // dummy first false case make any below case true
+                if (isNotNullOrEmpty(notifications.getPropertyZone1())) {
+                    sb.append(" OR zone:");
+                    sb.append(notifications.getPropertyZone1());
+                }
+                if (isNotNullOrEmpty(notifications.getPropertyZone2())) {
+                    sb.append(" OR zone:");
+                    sb.append(notifications.getPropertyZone2());
+                }
+                if (isNotNullOrEmpty(notifications.getPropertyZone3())) {
+                    sb.append(" OR zone:");
+                    sb.append(notifications.getPropertyZone3());
+                }
+                if (isNotNullOrEmpty(notifications.getPropertyZone4())) {
+                    sb.append(" OR zone:");
+                    sb.append(notifications.getPropertyZone4());
+                }
+                if (isNotNullOrEmpty(notifications.getPropertyZone5())) {
+                    sb.append(" OR zone:");
+                    sb.append(notifications.getPropertyZone5());
+                }
+                sb.append(" )");
             }
             if (notifications.getPropertyAreaMin() != null && notifications.getPropertyAreaMin() != 0) {
                 sb.append(" AND area>");
