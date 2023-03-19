@@ -8,6 +8,14 @@ public class StringCheck {
         return "";
     }
 
+    public static String firstNotNullWordSpaceDelimiter(String str) {
+        if(isNotNullOrEmpty(str)) {
+            String[] spaceSplitString = str.split("\\s+");
+            return ((spaceSplitString.length > 0) ? spaceSplitString[0] : ""); // don't double add delimiter
+        }
+        return "";
+    }
+
     public static boolean isNotNullOrEmpty(String str) {
         return(str != null && !str.isEmpty() && str.length() > 0);
     }

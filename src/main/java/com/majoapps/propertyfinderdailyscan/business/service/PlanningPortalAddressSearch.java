@@ -3,6 +3,8 @@ package com.majoapps.propertyfinderdailyscan.business.service;
 import com.majoapps.propertyfinderdailyscan.business.domain.PropertyListingDTO;
 import com.majoapps.propertyfinderdailyscan.data.repository.PropertyInformationRepository;
 import com.majoapps.propertyfinderdailyscan.utils.SpecificationUtil;
+import com.majoapps.propertyfinderdailyscan.utils.StringCheck;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +43,7 @@ public class PlanningPortalAddressSearch {
 
                     String addressString = SpecificationUtil.createAddressString(propertyListing);
                     if (!addressString.contains("LOT")) {
-                        log.debug("looking for address " + addressString);
+                        log.debug("looking for address {}", addressString);
                         List<String> returnAddressList = propertyInformationRepository.
                             findByAddress(addressString);
 
@@ -52,23 +54,23 @@ public class PlanningPortalAddressSearch {
                         }
 
                         if (returnAddressList.size() == 0) {
-                            log.debug("Cannot find address " + addressString);
+                            log.debug("Cannot find address {}", addressString);
                         } else if (returnAddressList.size() == 1) {
                             String returnAddreses[] = returnAddressList.get(0).split("\\,");
                             if (returnAddreses.length == 2) {
                                 propertyListing.setPropertyId(Integer.parseInt(returnAddreses[0]));
                                 propertyListing.setPlanningPortalAddress(returnAddreses[1]);
-                                log.debug("found the address " + returnAddreses[1]);
+                                log.debug("found the address {}", returnAddreses[1]);
                             } else {
-                                log.info("SQL response for planning portal wrongly formatted " + 
+                                log.info("SQL response for planning portal wrongly formatted {}", 
                                     returnAddressList.get(0).toString());
                             }
                         } else {
-                            log.debug("Found many address " + addressString);
+                            log.debug("Found many address {}", addressString);
                         }
 
                     } else {
-                        log.debug("Address contains LOT " + addressString);
+                        log.debug("Address contains LOT {}", addressString);
                     }
                         
                     propertyListingArrayList.add(propertyListing);
@@ -123,39 +125,59 @@ public class PlanningPortalAddressSearch {
             try {
                 String addressString = SpecificationUtil.createAddressString(propertyListing);
                     if (!addressString.contains("LOT")) {
-                        log.debug("looking for address " + addressString);
+                        PropertyListingDTO _propertyListing = propertyListing;
+                        log.debug("Looking for address {}", addressString);
                         List<String> returnAddressList = propertyInformationRepository.
                             findByAddress(addressString);
 
+                        // Reduce search criteria    
                         if (returnAddressList.size() == 0) {
-                            propertyListing.setSuburbName("");
-                            returnAddressList = propertyInformationRepository.findByAddress(
-                                SpecificationUtil.createAddressString(propertyListing));
+                            _propertyListing.setSuburbName("");
+                            String addressString1 = SpecificationUtil.createAddressString(_propertyListing);
+                            log.debug("Looking for address1 {}", addressString1);
+                            returnAddressList = propertyInformationRepository.findByAddress(addressString1);
+
+                            // Reduce search criteria  
+                            if (returnAddressList.size() == 0) {
+                                _propertyListing.setStreetName(
+                                    StringCheck.firstNotNullWordSpaceDelimiter(_propertyListing.getStreetName()));
+                                String addressString2 = SpecificationUtil.createAddressString(_propertyListing);
+
+                                log.debug("Looking for address2 {}", addressString2);
+                                returnAddressList = propertyInformationRepository.findByAddress(addressString2);
+                                if (returnAddressList.size() == 0) {
+                                    log.debug("Cannot find address2 {}", addressString2);
+                                } else {
+                                    log.debug("Looking address {} Found address2 {}", addressString, addressString2);
+                                }  
+                            } else {
+                                log.debug("Looking address {} Found address1 {}", addressString, addressString1);
+                            }
                         }
 
                         if (returnAddressList.size() == 0) {
-                            log.debug("Cannot find address " + addressString);
+                            log.debug("Cannot find address {}", addressString);
                         } else if (returnAddressList.size() == 1) {
                             String returnAddreses[] = returnAddressList.get(0).split("\\,");
                             if (returnAddreses.length == 2) {
                                 propertyListing.setPropertyId(Integer.parseInt(returnAddreses[0]));
                                 propertyListing.setPlanningPortalAddress(returnAddreses[1]);
-                                log.debug("found the address " + returnAddreses[1]);
+                                log.debug("found the address {}", returnAddreses[1]);
                             } else {
-                                log.info("SQL response for planning portal wrongly formatted " + 
+                                log.info("SQL response for planning portal wrongly formatted {}", 
                                     returnAddressList.get(0).toString());
                             }
                         } else {
-                            log.debug("Found many address " + addressString);
+                            log.debug("Found many address {}", addressString);
                         }
 
                     } else {
-                        log.debug("Address contains LOT " + addressString);
+                        log.debug("Address contains LOT {}", addressString);
                     }
                         
                     propertyListingArrayList.add(propertyListing);
             } catch (Exception e){
-                log.debug(" runnable exception " + e.getLocalizedMessage());
+                log.debug(" runnable exception {}", e.getLocalizedMessage());
             }
         }
 
