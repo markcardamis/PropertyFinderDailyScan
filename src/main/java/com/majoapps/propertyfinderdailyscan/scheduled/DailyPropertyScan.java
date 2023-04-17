@@ -116,11 +116,15 @@ public class DailyPropertyScan {
         Integer price;
         Integer priceStart = 100000;
         Integer priceIncrementAmount;
+        Integer priceIncrementAmountTinyNSW = 15000;
         Integer priceIncrementAmountSmall = 40000;
         Integer priceIncrementAmountSmallSydney = 100000;
         Integer priceIncrementAmountSmallRegional = 20000;
+        Integer priceIncrementAmountSmallNSW = 20000;
         Integer priceIncrementAmountMedium = 200000;
+        Integer priceIncrementAmountMediumNSW = 100000;
         Integer priceIncrementAmountLarge = 2000000;
+        Integer priceIncrementAmountLargeNSW = 1000000;
         Integer priceStop = 20000000;
         Integer minLandSize = 100;
         String[] propertyTypes = new String[]{
@@ -137,6 +141,10 @@ public class DailyPropertyScan {
             "NotUnderContract"
         };
 
+        PropertySearchRequest.Locations nswRegion = new PropertySearchRequest.Locations();
+        nswRegion.state = "NSW";
+        nswRegion.region = "";
+        
         PropertySearchRequest.Locations sydneyRegion = new PropertySearchRequest.Locations();
         sydneyRegion.state = "NSW";
         sydneyRegion.region = "Sydney Region";
@@ -146,11 +154,23 @@ public class DailyPropertyScan {
         PropertySearchRequest.Locations hunterCentralNorthCoasts = new PropertySearchRequest.Locations();
         hunterCentralNorthCoasts.state = "NSW";
         hunterCentralNorthCoasts.region = "Hunter, Central & North Coasts";
+        PropertySearchRequest.Locations midNorthCoast = new PropertySearchRequest.Locations();
+        midNorthCoast.state = "NSW";
+        midNorthCoast.region = "Mid North Coast";
+        PropertySearchRequest.Locations hunterRegion = new PropertySearchRequest.Locations();
+        hunterRegion.state = "NSW";
+        hunterRegion.region = "Hunter Region";
+        PropertySearchRequest.Locations lowerHunter = new PropertySearchRequest.Locations();
+        lowerHunter.state = "NSW";
+        lowerHunter.region = "Lower Hunter";
         PropertySearchRequest.Locations regionalNSW = new PropertySearchRequest.Locations();
         regionalNSW.state = "NSW";
         regionalNSW.region = "Regional NSW";
+        // PropertySearchRequest.Locations[] locations = new PropertySearchRequest.Locations[]
+        //         {sydneyRegion, illawarraSouthCoast, hunterCentralNorthCoasts, midNorthCoast, 
+        //             hunterRegion, regionalNSW};
         PropertySearchRequest.Locations[] locations = new PropertySearchRequest.Locations[]
-                {sydneyRegion, illawarraSouthCoast, hunterCentralNorthCoasts, regionalNSW};
+        {nswRegion};
 
         for (PropertySearchRequest.Locations location : locations) {
             log.info("Location {} ", location.region);
@@ -158,7 +178,17 @@ public class DailyPropertyScan {
             price = priceStart;
 
             while (price <= priceStop) {
-                if (price < 1000000 && location.region.equals(regionalNSW.region)) {
+                if (location.region.equals(nswRegion.region)) {
+                    if (price < 1000000) {
+                        priceIncrementAmount = priceIncrementAmountTinyNSW;
+                    } else if (price < 2000000) {
+                        priceIncrementAmount = priceIncrementAmountSmallNSW;
+                    } else if (price < 4000000) {
+                        priceIncrementAmount = priceIncrementAmountMediumNSW;
+                    } else {
+                        priceIncrementAmount = priceIncrementAmountLargeNSW;
+                    }
+                } else if (price < 1000000 && location.region.equals(regionalNSW.region)) {
                     priceIncrementAmount = priceIncrementAmountSmallRegional;
                 } else if (price < 1000000 && location.region.equals(sydneyRegion.region)) {
                     priceIncrementAmount = priceIncrementAmountSmallSydney;
