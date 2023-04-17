@@ -358,7 +358,6 @@ public class DailyPropertyScan {
     }
 
 
-
     private void saveDatabasePoint(PropertyListingService propertyListingService, List<PropertyListingDTO>  propertyListings) throws Exception {
         for (PropertyListingDTO propertyListingDTO : propertyListings) {
             PropertyListing propertyListing = modelMapper.map(propertyListingDTO, PropertyListing.class);
