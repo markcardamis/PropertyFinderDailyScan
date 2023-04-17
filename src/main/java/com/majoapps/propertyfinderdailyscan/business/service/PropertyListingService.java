@@ -75,7 +75,7 @@ public class PropertyListingService {
         if (propertyListingResponse.isEmpty()) { 
             return this.propertyListingRepository.save(propertyListing);
         } else {
-            log.info("Duplicate domainlistingId {} ", propertyListing.getDomainListingId());
+            log.debug("Duplicate domainlistingId {} ", propertyListing.getDomainListingId());
             return propertyListingResponse.get(0);
         }
     }
@@ -86,7 +86,7 @@ public class PropertyListingService {
         if (propertyListingResponse.isEmpty()) { 
             return this.propertyListingRepository.save(propertyListing);
         } else {
-            log.info("Duplicate domainlistingId {} ", propertyListing.getDomainListingId());
+            log.debug("Duplicate domainlistingId {} ", propertyListing.getDomainListingId());
             return propertyListingResponse.get(0);
         }
     }

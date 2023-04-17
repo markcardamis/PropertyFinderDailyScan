@@ -76,7 +76,7 @@ public class PlanningPortalAddressSearch {
                     propertyListingArrayList.add(propertyListing);
                 }
             }
-            log.info("Finished all planning portal address threads");
+            log.debug("Finished all planning portal address threads");
         }
         return propertyListingArrayList;
     }
@@ -101,7 +101,7 @@ public class PlanningPortalAddressSearch {
 
                 }
             }
-            log.info("Finished all planning portal address threads");
+            log.debug("Finished all planning portal address threads");
         }
         executor.shutdown();
         // Wait until all threads are finish
