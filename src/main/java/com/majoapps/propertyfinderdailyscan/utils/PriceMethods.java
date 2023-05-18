@@ -2,18 +2,60 @@ package com.majoapps.propertyfinderdailyscan.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Slf4j
 public class PriceMethods
 {
+    private static int indexOfRegEx(String strSource, String strRegExPattern) {
+        int idx = -1; //default value
+
+        Pattern p =  Pattern.compile(strRegExPattern); //compile pattern from string
+        Matcher m = p.matcher(strSource); //create a matcher object
+
+        if(m.find()) {
+            idx = m.start(); //get the start index using start method of the Matcher class
+        }
+        return idx;
+    }
+
     private static final String errorNumber = "0";
 
     public static Integer priceStringToInteger(String text) throws Exception {
         try {
+            String originalText = text;
             if (text != null && text.length() > 0 && text.matches(".*\\d.*")) {
                 text = text.toLowerCase();
                 int firstIndex = text.indexOf('$');
+                if (firstIndex < 0) {
+                    int firstIndex1 = indexOfRegEx(text,"\\d\\d\\d\\d\\d\\d");
+                    if (firstIndex1 < 0) {
+                        int firstIndex2 = indexOfRegEx(text,"(\\d+,)?\\d\\d\\d,\\d\\d\\d");
+                        if (firstIndex2 < 0) {
+                            int firstIndex3 = indexOfRegEx(text,"\\d\\d\\dk");
+                            if (firstIndex3 < 0) {
+                                int firstIndex4 = indexOfRegEx(text,"\\d\\.(\\d+)( )?m");
+                                if (firstIndex4 < 0) {
+                                    log.debug("Regex pattern cannot parse \"{}\"", originalText);
+                                } else {
+                                    firstIndex = firstIndex4;
+                                }
+                            } else {
+                                firstIndex = firstIndex3;
+                            }
+                        } else {
+                            firstIndex = firstIndex2;
+                        }
+                    } else {
+                        firstIndex = firstIndex1;
+                    }
+                } else {
+                    firstIndex++;
+                }
                 if (firstIndex >= 0) { // found a $
-                    text = text.substring(firstIndex + 1);
+//                    text = text.substring(firstIndex + 1);
+                    text = text.substring(firstIndex);
 
                     int secondIndex = text.indexOf('-');
                     int thirdIndex = text.indexOf("to");
@@ -59,7 +101,7 @@ public class PriceMethods
 
             text = removeMultipleDecimals(text);
         } catch (Exception e){
-            log.error(" Cannot parse {} : {} ", text, e);
+            log.error("Exception string parse \"{}\" : \"{}\" ", text, e.toString());
             return (int) Double.parseDouble(errorNumber);
         }
         return ((int) Double.parseDouble(text));
@@ -86,7 +128,7 @@ public class PriceMethods
             text = text.replaceAll("[^0-9]", "");
             return Integer.parseInt(text);
         }
-        log.debug("Convert String To Integer null passed in {}");
+        log.debug("Convert String To Integer null passed in {}", text);
         return 1;
     }
 
