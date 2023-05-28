@@ -34,7 +34,7 @@
                      "Domain URL: " + StringCheck.isNotNullOrEmpty(propertyListing.listingURL, "") + "\n" +
                      "Summary: " + StringCheck.isNotNullOrEmpty(propertyListing.summaryDescription, "");
 
-                 Email from = new Email("noreply@majoapps.com");
+                 Email from = new Email(System.getenv().get("DEFAULT_EMAIL_REPLY_TO"));
                  String subject = "Re: Domain Trigger " + propertyListing.address;
                  Email to = new Email(StringCheck.isNotNullOrEmpty(email) ? email : System.getenv().get("DEFAULT_EMAIL"));
                  Content content = new Content("text/plain", json);
